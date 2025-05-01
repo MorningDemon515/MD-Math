@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
 const float MD_MATH_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679f;
 //Take 100 decimal places for pi
@@ -172,9 +175,138 @@ int MD_Math_Pow(int x,int y)
     
 }
 
-float MD_Math_Hypot(int x,int y)
+float MD_Math_Hypot(float x,float y)
 {
     return MD_Math_Sqrt((x*x + y*y));
+}
+
+float MD_Math_Factorial(float number)
+{
+    return number * (number - 1);
+}
+
+float MD_Math_Sin(float x)
+{
+    return x - ((x*x*x)/MD_Math_Factorial(3.0f)) + 
+        ((x*x*x*x*x)/MD_Math_Factorial(5.0f))-
+        ((x*x*x*x*x*x*x)/MD_Math_Factorial(7.0f))+
+        ((x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(9.0f));
+}
+
+float MD_Math_Cos(float x)
+{
+    return 1 - ((x*x)/MD_Math_Factorial(2.0f)) + 
+        ((x*x*x*x)/MD_Math_Factorial(4.0f))-
+        ((x*x*x*x*x*x)/MD_Math_Factorial(6.0f))+
+        ((x*x*x*x*x*x*x*x)/MD_Math_Factorial(8.0f));//-
+        //((x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(10.0f))+
+        //((x*x*x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(12.0f))-
+        //((x*x*x*x*x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(14.0f));
+}
+
+float MD_Math_Tan(float x )
+{
+    return x + ((x*x*x)/3) - ((2*x*x*x*x*x)/15);
+}
+
+float MD_Math_Cot(float x)
+{
+    return MD_Math_Cos(x)/MD_Math_Sin(x);
+}
+
+bool MD_Math_Equal(float a,float b, float epsilon)
+{
+    if(MD_Math_Abs(a - b) < epsilon)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+float MD_Math_EtoXPower(float x)
+{
+    return 1 + x + (x*x)/MD_Math_Factorial(2.0f)+
+    (x*x*x)/MD_Math_Factorial(3.0f)+
+    (x*x*x*x)/MD_Math_Factorial(4.0f)+
+    (x*x*x*x*x)/MD_Math_Factorial(5.0f)+
+    (x*x*x*x*x*x)/MD_Math_Factorial(6.0f);
+}
+
+float MD_Math_ln1andx(float x)
+{
+    return 1 +- x + (x*x)/MD_Math_Factorial(2.0f)-
+    (x*x*x)/MD_Math_Factorial(3.0f)+
+    (x*x*x*x)/MD_Math_Factorial(4.0f)-
+    (x*x*x*x*x)/MD_Math_Factorial(5.0f);
+}
+
+void MD_Math_Frexp(double x, double *m, int *e) {
+    
+    // Extract the binary representation of the double
+    uint64_t bits;
+    memcpy(&bits, &x, sizeof(double));
+    
+    // Decompose symbols, exponents, and mantissas
+    int sign = (bits >> 63) & 0x1;
+    int exponent = (bits >> 52) & 0x7FF;
+    uint64_t mantissa = bits & 0x000FFFFFFFFFFFFFULL;
+
+    // Handling Non-normalized Numbers (Exponential All 0)
+    if (exponent == 0) {
+        // Find the position of the highest 1 in the mantissa number
+        int shift = 0;
+        while ((mantissa & (1ULL << 51)) == 0 && shift < 53) {
+            mantissa <<= 1;
+            shift++;
+        }
+        // Adjust the exponent and mantissa number
+        exponent = -1022 - shift;
+        mantissa &= 0x000FFFFFFFFFFFFFULL; // Clear the implicit 1
+        exponent += 1; // Mantissa adjusted to [0.5, 1]
+    } else {
+        // Normalize number: Adjusts the exponent and adds an implied 1
+        exponent -= 1023;
+        mantissa |= (1ULL << 52); // Add an implicit 1
+    }
+
+    // Construct a new mantissa mantissa number
+    uint64_t new_bits = (uint64_t)(sign) << 63;
+    new_bits |= (uint64_t)(exponent + 1023) << 52;
+    new_bits |= mantissa & 0x000FFFFFFFFFFFFFULL;
+    memcpy(m, &new_bits, sizeof(double));
+
+    *e = exponent;
+}
+
+float MD_Math_lnx(float a)
+{
+    int k;
+    double b;
+    MD_Math_Frexp(a,&b ,&k);
+    b *= 2.0;
+    k -= 1;
+    
+    double x = 0.0; 
+    for (int i = 0; i < 20; i++) {
+        double exp_x = MD_Math_EtoXPower(x);
+        double delta = (exp_x - b) / exp_x;
+        x -= delta;
+        if (MD_Math_Abs(delta) < 1e-10) break;
+    }
+    return x + k * 0.6931471805599453;
+}
+
+float MD_Math_lgx(float x)
+{
+    return MD_Math_lnx(x) * 0.43429448190325176f;
+}
+
+float MD_Math_log2(float x)
+{
+    return MD_Math_lnx(x) * 1.4426950408889634f;
 }
 
 float MD_Math_AngularToRadian(float angle)
