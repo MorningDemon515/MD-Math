@@ -182,7 +182,15 @@ float MD_Math_Hypot(float x,float y)
 
 float MD_Math_Factorial(float number)
 {
-    return number * (number - 1);
+    unsigned long long factorial = 1;
+ 
+    for(int i = 1; i <=number; ++i)
+    {
+        factorial *= i;
+    }
+
+    return factorial;
+    
 }
 
 float MD_Math_Sin(float x)
@@ -212,6 +220,33 @@ float MD_Math_Tan(float x )
 float MD_Math_Cot(float x)
 {
     return MD_Math_Cos(x)/MD_Math_Sin(x);
+}
+
+float MD_Math_ArcSin(float x)
+{
+    return x + 
+            0.1666666667f * x * x * x +
+            0.075f * x * x * x * x * x +
+            0.04464285714 * x * x * x * x * x * x * x +
+            0.03038194444 * x * x * x * x * x * x * x * x * x +
+            0.02237215909 * x * x * x * x * x * x * x * x * x * x * x +
+            0.01735276442 * x * x * x * x * x * x * x * x * x * x * x * x * x;
+}
+
+float MD_Math_ArcCos(float x)
+{
+    return MD_MATH_PI * 0.5f - MD_Math_ArcSin(x);
+}
+
+float MD_Math_ArcTan(float x)
+{
+    return x - 
+            x * x * x * MD_MATH_THIRD +
+            x * x * x * x * x * 0.2f -
+            x * x * x * x * x * x * x * 0.1428571429f +
+            x * x * x * x * x * x * x * x * x * 0.1111111111f -
+            x * x * x * x * x * x * x * x * x * x * x * 0.09090909091f +
+            x * x * x * x * x * x * x * x * x * x * x * x * x * 0.07692307692f;
 }
 
 bool MD_Math_Equal(float a,float b, float epsilon)
