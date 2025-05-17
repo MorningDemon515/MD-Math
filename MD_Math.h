@@ -463,3 +463,265 @@ float MD_Math_ComputeBallVolume(float radius)
 {
     return 4.0f * MD_MATH_THIRD * MD_MATH_PI * radius * radius * radius;
 }
+
+typedef float MD_MATH_VECTOR2[2];
+typedef float MD_MATH_VECTOR3[3];
+typedef float MD_MATH_VECTOR4[4];
+
+/*
+typedef float MD_MATH_MATRIX2x2[4];
+typedef float MD_MATH_MATRIX2x3[6];
+typedef float MD_MATH_MATRIX2x4[8];
+
+typedef float MD_MATH_MATRIX3x2[6];
+typedef float MD_MATH_MATRIX3x3[9];
+typedef float MD_MATH_MATRIX3x4[12];
+
+typedef float MD_MATH_MATRIX4x2[8];
+typedef float MD_MATH_MATRIX4x3[12];
+*/
+
+typedef float MD_MATH_MATRIX[16];//4x4
+
+MD_MATH_VECTOR2 BasisVector2I = {1.0f,0.0f};
+MD_MATH_VECTOR2 BasisVector2J = {0.0f,1.0f};
+
+MD_MATH_VECTOR3 BasisVector3I = {1.0f,0.0f,0.0f};
+MD_MATH_VECTOR3 BasisVector3J = {0.0f,1.0f,0.0f};
+
+MD_MATH_VECTOR4 BasisVector4I = {1.0f,0.0f,0.0f,0.0f};
+MD_MATH_VECTOR4 BasisVector4J = {0.0f,1.0f,0.0f,0.0f};
+
+MD_MATH_VECTOR3 BasisVector3K = {0.0f,0.0f,1.0f};
+MD_MATH_VECTOR4 BasisVector4K = {0.0f,0.0f,1.0f,0.0f};
+
+MD_MATH_VECTOR4 BasisVector4W = {0.0f,0.0f,0.0f,1.0f};
+
+
+// About Vector--------------------------------------------------------------------------------
+bool MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
+{
+    if(
+        MD_Math_Equal(v1[0],v2[0],MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1[1],v2[1],MD_MATH_EPSILON)
+    )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
+{
+    if(
+        MD_Math_Equal(v1[0],v2[0],MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1[1],v2[1],MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1[2],v2[2],MD_MATH_EPSILON) 
+    )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
+{
+    if(
+        MD_Math_Equal(v1[0],v2[0],MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1[1],v2[1],MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1[2],v2[2],MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1[3],v2[3],MD_MATH_EPSILON)
+    )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void MD_Math_Vector2Addition(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2,MD_MATH_VECTOR2 result)
+{
+    result[0] = v1[0] + v2[0];
+    result[1] = v1[1] + v2[1];
+}
+
+void MD_Math_Vector3Addition(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2,MD_MATH_VECTOR3 result)
+{
+    result[0] = v1[0] + v2[0];
+    result[1] = v1[1] + v2[1];
+    result[2] = v1[2] + v2[2];
+}
+
+void MD_Math_Vector4Addition(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2,MD_MATH_VECTOR4 result)
+{
+    result[0] = v1[0] + v2[0];
+    result[1] = v1[1] + v2[1];
+    result[2] = v1[2] + v2[2];
+    result[3] = v1[3] + v2[3];
+}
+
+void MD_Math_Vector2Multiplication(MD_MATH_VECTOR2 v,float x)
+{
+    v[0] = x * v[0];
+    v[1] = x * v[1];
+}
+
+void MD_Math_Vector3Multiplication(MD_MATH_VECTOR3 v,float x)
+{
+    v[0] = x * v[0];
+    v[1] = x * v[1];
+    v[2] = x * v[2];
+}
+
+void MD_Math_Vector4Multiplication(MD_MATH_VECTOR4 v,float x)
+{
+    v[0] = x * v[0];
+    v[1] = x * v[1];
+    v[2] = x * v[2];
+    v[3] = x * v[3];
+}
+
+float MD_Math_ComputeVector2Length(MD_MATH_VECTOR2 v)
+{
+    return MD_Math_Hypot(v[0],v[1]);
+}
+
+float MD_Math_ComputeVector3Length(MD_MATH_VECTOR3 v)
+{
+    return MD_Math_Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+}
+
+float MD_Math_ComputeVector4Length(MD_MATH_VECTOR4 v)
+{
+    return MD_Math_Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);
+}
+
+void MD_Math_Vector2Normalized(MD_MATH_VECTOR2 v)
+{
+    v[0] = v[0] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1]); 
+    v[1] = v[1] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1]); 
+}
+
+void MD_Math_Vector3Normalized(MD_MATH_VECTOR3 v)
+{
+    v[0] = v[0] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2]); 
+    v[1] = v[1] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2]); 
+    v[2] = v[2] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2]); 
+}
+
+void MD_Math_Vector4Normalized(MD_MATH_VECTOR4 v)
+{
+    v[0] = v[0] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]); 
+    v[1] = v[1] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);
+    v[2] = v[2] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]); 
+    v[3] = v[3] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);  
+}
+
+float MD_Math_Vector2Dot(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
+{
+    return 
+       v1[0] * v2[0] +
+       v1[1] * v2[1]
+    ;
+}
+
+float MD_Math_Vector3Dot(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
+{
+    return 
+       v1[0] * v2[0] +
+       v1[1] * v2[1] +
+       v1[2] * v2[2]
+    ;
+}
+
+float MD_Math_Vector4Dot(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
+{
+    return 
+       v1[0] * v2[0] +
+       v1[1] * v2[1] +
+       v1[2] * v2[2] +
+       v1[3] * v2[3]
+    ;
+}
+
+void MD_Math_VectorCross(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2, MD_MATH_VECTOR3 r)
+{
+    r[0] = v1[1] * v2[2] - v2[1] * v1[2];
+    r[1] = v1[2] * v2[0] - v2[2] * v1[0];
+    r[2] = v1[0] * v2[1] - v2[0] * v1[1];
+}
+
+float MD_Math_ProjectionOfVector2(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2)
+{
+    return 
+        MD_Math_ComputeVector2Length(v1) * 
+        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector2Dot(v1,v2) * MD_Math_Rsqrt(v1[0] * v1[0] + v1[1] * v1[1])*
+                                                                MD_Math_Rsqrt(v2[0]* v2[0] + v2[1]*v2[1] )))
+    ;
+}
+
+float MD_Math_ProjectionOfVector3(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2)
+{
+    return 
+        MD_Math_ComputeVector3Length(v1) * 
+        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector3Dot(v1,v2) * MD_Math_Rsqrt(v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2])*
+                                                                MD_Math_Rsqrt(v2[0]* v2[0] + v2[1]*v2[1] + v2[2] * v2[2])))
+    ;
+}
+
+float MD_Math_ProjectionOfVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
+{
+    return 
+        MD_Math_ComputeVector4Length(v1) * 
+        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector4Dot(v1,v2) * MD_Math_Rsqrt(v1[0] * v1[0] + v1[1] * v1[1]+ v1[2] * v1[2]+ v1[3] * v1[3])*
+                                                                MD_Math_Rsqrt(v2[0]* v2[0] + v2[1]*v2[1] + v1[2] * v1[2]+ v1[3] * v1[3])))
+    ;
+}
+
+void MD_Math_ProjectionVector2(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2, MD_MATH_VECTOR2 r)
+{
+    MD_Math_Vector2Normalized(r);
+    r[0] = MD_Math_ProjectionOfVector2(v1,v2) * r[0];
+    r[1] = MD_Math_ProjectionOfVector2(v1,v2) * r[1];
+}
+
+void MD_Math_ProjectionVector3(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2, MD_MATH_VECTOR3 r)
+{
+    MD_Math_Vector3Normalized(r);
+    r[0] = MD_Math_ProjectionOfVector3(v1,v2) * r[0];
+    r[1] = MD_Math_ProjectionOfVector3(v1,v2) * r[1];
+    r[2] = MD_Math_ProjectionOfVector3(v1,v2) * r[2];
+}
+
+void MD_Math_ProjectionVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2, MD_MATH_VECTOR4 r)
+{
+    MD_Math_Vector4Normalized(r);
+    r[0] = MD_Math_ProjectionOfVector4(v1,v2) * r[0];
+    r[1] = MD_Math_ProjectionOfVector4(v1,v2) * r[1];
+    r[2] = MD_Math_ProjectionOfVector4(v1,v2) * r[2];
+    r[3] = MD_Math_ProjectionOfVector4(v1,v2) * r[3];
+}
+//---------------------------------------------------------------------------------------------------------
+//About Matrix --------------------------------------------------------------------------------------------
+
+void MD_Math_VectorMulMatrix(MD_MATH_MATRIX m, MD_MATH_VECTOR4 v, MD_MATH_VECTOR4 r)
+{
+   r[0] = v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + v[3]*m[12];
+   r[1] = v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + v[3]*m[13];
+   r[2] = v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + v[3]*m[14];
+   r[3] = v[0] * m[3] + v[1] * m[7] + v[2] * m[11] + v[3]*m[15];
+}
+
+void MD_Math_MatrixMulMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
+{
+
+}
+
