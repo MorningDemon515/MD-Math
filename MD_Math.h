@@ -722,6 +722,158 @@ void MD_Math_VectorMulMatrix(MD_MATH_MATRIX m, MD_MATH_VECTOR4 v, MD_MATH_VECTOR
 
 void MD_Math_MatrixMulMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
 {
+    r[0] = m2[0] * m1[0] + m2[1] * m1[4] + m2[2] * m1[8] + m2[3] * m1[12] ;
+    r[1] = m2[0] * m1[1] + m2[1] * m1[5] + m2[2] * m1[9] + m2[3] * m1[13] ;
+    r[2] = m2[0] * m1[2] + m2[1] * m1[6] + m2[2] * m1[10] + m2[3] * m1[14] ;
+    r[3] = m2[0] * m1[3] + m2[1] * m1[7] + m2[2] * m1[11] + m2[3] * m1[15] ;
+
+    r[4] = m2[4] * m1[0] + m2[5] * m1[4] + m2[6] * m1[8] + m2[7] * m1[12] ;
+    r[5] = m2[4] * m1[1] + m2[5] * m1[5] + m2[6] * m1[9] + m2[7] * m1[13] ;
+    r[6] = m2[4] * m1[2] + m2[5] * m1[6] + m2[6] * m1[10] + m2[7] * m1[14] ;
+    r[7] = m2[4] * m1[3] + m2[5] * m1[7] + m2[6] * m1[11] + m2[7] * m1[15] ;
+
+    r[8] = m2[8] * m1[0] + m2[9] * m1[4] + m2[10] * m1[8] + m2[11] * m1[12] ;
+    r[9] = m2[8] * m1[1] + m2[9] * m1[5] + m2[10] * m1[9] + m2[11] * m1[13] ;
+    r[10] = m2[8] * m1[2] + m2[9] * m1[6] + m2[10] * m1[10] + m2[11] * m1[14] ;
+    r[11] = m2[8] * m1[3] + m2[9] * m1[7] + m2[10] * m1[11] + m2[11] * m1[15] ;
+
+    r[12] = m2[12] * m1[0] + m2[13] * m1[4] + m2[14] * m1[8] + m2[15] * m1[12] ;
+    r[13] = m2[12] * m1[1] + m2[13] * m1[5] + m2[14] * m1[9] + m2[15] * m1[13] ;
+    r[14] = m2[12] * m1[2] + m2[13] * m1[6] + m2[14] * m1[10] + m2[15] * m1[14] ;
+    r[15] = m2[12] * m1[3] + m2[13] * m1[7] + m2[14] * m1[11] + m2[15] * m1[15] ;
+}
+
+
+void MD_Math_MatrixAddMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
+{
+    r[0] = m1[0] + m2[0];
+    r[1] = m1[1] + m2[1];
+    r[2] = m1[2] + m2[2];
+    r[3] = m1[3] + m2[3];
+
+    r[4] = m1[4] + m2[4];
+    r[5] = m1[5] + m2[5];
+    r[6] = m1[6] + m2[6];
+    r[7] = m1[7] + m2[7];
+
+    r[8] = m1[8] + m2[8];
+    r[9] = m1[9] + m2[9];
+    r[10] = m1[10] + m2[10];
+    r[11] = m1[11] + m2[11];
+
+    r[12] = m1[12] + m2[12];
+    r[13] = m1[13] + m2[13];
+    r[14] = m1[14] + m2[14];
+    r[15] = m1[15] + m2[15];
 
 }
 
+void MD_Math_MatrixMultiplication(MD_MATH_MATRIX m,float x)
+{
+    m[0] = x * m[0];
+    m[1] = x * m[1];
+    m[2] = x * m[2];
+    m[3] = x * m[3];
+
+    m[4] = x * m[4];
+    m[5] = x * m[5];
+    m[6] = x * m[6];
+    m[7] = x * m[7];
+
+    m[8] = x * m[8];
+    m[9] = x * m[9];
+    m[10] = x * m[10];
+    m[11] = x * m[11];
+
+    m[12] = x * m[12];
+    m[13] = x * m[13];
+    m[14] = x * m[14];
+    m[15] = x * m[15];
+}
+
+void MD_Math_MatrixTranspose(MD_MATH_MATRIX m)
+{
+    m[1] = m[4];
+    m[2] = m[8];
+    m[3] = m[12];
+
+    m[7] = m[13];
+    m[11] = m[14];
+
+    m[6] = m[9];
+}
+
+void MD_Math_AdjointMatrix(MD_MATH_MATRIX m)
+{
+    float t[16];
+    for (int i = 0; i < 16; i++) {
+        t[i] = m[i];
+    }
+
+    #define DET3(a0,a1,a2, b0,b1,b2, c0,c1,c2) ( \
+        a0*(b1*c2 - b2*c1) - \
+        a1*(b0*c2 - b2*c0) + \
+        a2*(b0*c1 - b1*c0) )
+
+    m[0]  = DET3(t[5], t[6], t[7],  t[9], t[10], t[11],  t[13], t[14], t[15]);
+    m[4]  = -DET3(t[4], t[6], t[7],  t[8], t[10], t[11],  t[12], t[14], t[15]);
+    m[8]  = DET3(t[4], t[5], t[7],  t[8], t[9], t[11],  t[12], t[13], t[15]);
+    m[12] = -DET3(t[4], t[5], t[6],  t[8], t[9], t[10],  t[12], t[13], t[14]);
+    m[1]  = -DET3(t[1], t[2], t[3],  t[9], t[10], t[11],  t[13], t[14], t[15]);
+    m[5]  = DET3(t[0], t[2], t[3],  t[8], t[10], t[11],  t[12], t[14], t[15]);
+    m[9]  = -DET3(t[0], t[1], t[3],  t[8], t[9], t[11],  t[12], t[13], t[15]);
+    m[13] = DET3(t[0], t[1], t[2],  t[8], t[9], t[10],  t[12], t[13], t[14]);
+    m[2]  = DET3(t[1], t[2], t[3],  t[5], t[6], t[7],  t[13], t[14], t[15]);
+    m[6]  = -DET3(t[0], t[2], t[3],  t[4], t[6], t[7],  t[12], t[14], t[15]);
+    m[10] = DET3(t[0], t[1], t[3],  t[4], t[5], t[7],  t[12], t[13], t[15]);
+    m[14] = -DET3(t[0], t[1], t[2],  t[4], t[5], t[6],  t[12], t[13], t[14]);
+    m[3]  = -DET3(t[1], t[2], t[3],  t[5], t[6], t[7],  t[9], t[10], t[11]);
+    m[7]  = DET3(t[0], t[2], t[3],  t[4], t[6], t[7],  t[8], t[10], t[11]);
+    m[11] = -DET3(t[0], t[1], t[3],  t[4], t[5], t[7],  t[8], t[9], t[11]);
+    m[15] = DET3(t[0], t[1], t[2],  t[4], t[5], t[6],  t[8], t[9], t[10]);
+
+    #undef DET3
+}
+
+float MD_Math_DetMatrix(MD_MATH_MATRIX m)
+{
+
+    float m00 = m[0],  m01 = m[1],  m02 = m[2],  m03 = m[3];
+    float m10 = m[4],  m11 = m[5],  m12 = m[6],  m13 = m[7];
+    float m20 = m[8],  m21 = m[9],  m22 = m[10], m23 = m[11];
+    float m30 = m[12], m31 = m[13], m32 = m[14], m33 = m[15];
+
+    float det00 = m11 * (m22 * m33 - m23 * m32) 
+                - m12 * (m21 * m33 - m23 * m31) 
+                + m13 * (m21 * m32 - m22 * m31);
+
+    float det01 = m10 * (m22 * m33 - m23 * m32) 
+                - m12 * (m20 * m33 - m23 * m30) 
+                + m13 * (m20 * m32 - m22 * m30);
+
+    float det02 = m10 * (m21 * m33 - m23 * m31) 
+                - m11 * (m20 * m33 - m23 * m30) 
+                + m13 * (m20 * m31 - m21 * m30);
+
+    float det03 = m10 * (m21 * m32 - m22 * m31) 
+                - m11 * (m20 * m32 - m22 * m30) 
+                + m12 * (m20 * m31 - m21 * m30);
+
+    return m00 * det00 
+           - m01 * det01 
+           + m02 * det02 
+           - m03 * det03;
+}
+
+
+void MD_Math_InvMatrix(MD_MATH_MATRIX m)
+{
+    float m1[16];
+    for (int i = 0; i < 16; i++) {
+        m1[i] = m[i];
+    }
+
+    MD_Math_AdjointMatrix(m);
+    MD_Math_MatrixMultiplication(m , (1/MD_Math_DetMatrix(m1)));
+    MD_Math_MatrixTranspose(m);
+}
