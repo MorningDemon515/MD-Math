@@ -25,6 +25,8 @@ const float MD_MATH_1Radian = 57.30f;
 
 const float MD_MATH_EPSILON = 1.192092896e-07f;
 
+const float MD_MATH_LN2 = 0.69314718055994530942f;
+
 //Special trigonometric values
 #define MD_MATH_SIN0  0.0f, 
 #define MD_MATH_SIN30  0.5f,
@@ -162,19 +164,6 @@ float MD_Math_Rsqrt(float number)
 	return y;
 }
 
-int MD_Math_Pow(int x,int y)
-{
-    int xx = 1;
-    
-    for (int i = 0; i < y ; i++)
-    {
-        xx = x * xx;
-    }
-
-    return xx;
-    
-}
-
 float MD_Math_Hypot(float x,float y)
 {
     return MD_Math_Sqrt((x*x + y*y));
@@ -270,68 +259,37 @@ float MD_Math_EtoXPower(float x)
     (x*x*x*x*x*x)/MD_Math_Factorial(6.0f);
 }
 
-float MD_Math_ln1andx(float x)
+float MD_Math_lnx(float x)
 {
-    return 1 +- x + (x*x)/MD_Math_Factorial(2.0f)-
-    (x*x*x)/MD_Math_Factorial(3.0f)+
-    (x*x*x*x)/MD_Math_Factorial(4.0f)-
-    (x*x*x*x*x)/MD_Math_Factorial(5.0f);
-}
-
-void MD_Math_Frexp(double x, double *m, int *e) {
-    
-    // Extract the binary representation of the double
-    uint64_t bits;
-    memcpy(&bits, &x, sizeof(double));
-    
-    // Decompose symbols, exponents, and mantissas
-    int sign = (bits >> 63) & 0x1;
-    int exponent = (bits >> 52) & 0x7FF;
-    uint64_t mantissa = bits & 0x000FFFFFFFFFFFFFULL;
-
-    // Handling Non-normalized Numbers (Exponential All 0)
-    if (exponent == 0) {
-        // Find the position of the highest 1 in the mantissa number
-        int shift = 0;
-        while ((mantissa & (1ULL << 51)) == 0 && shift < 53) {
-            mantissa <<= 1;
-            shift++;
-        }
-        // Adjust the exponent and mantissa number
-        exponent = -1022 - shift;
-        mantissa &= 0x000FFFFFFFFFFFFFULL; // Clear the implicit 1
-        exponent += 1; // Mantissa adjusted to [0.5, 1]
-    } else {
-        // Normalize number: Adjusts the exponent and adds an implied 1
-        exponent -= 1023;
-        mantissa |= (1ULL << 52); // Add an implicit 1
+    if (x <= 0.0) {
+        return 0.0 / 0.0;  // 返回 NaN
     }
 
-    // Construct a new mantissa mantissa number
-    uint64_t new_bits = (uint64_t)(sign) << 63;
-    new_bits |= (uint64_t)(exponent + 1023) << 52;
-    new_bits |= mantissa & 0x000FFFFFFFFFFFFFULL;
-    memcpy(m, &new_bits, sizeof(double));
-
-    *e = exponent;
-}
-
-float MD_Math_lnx(float a)
-{
-    int k;
-    double b;
-    MD_Math_Frexp(a,&b ,&k);
-    b *= 2.0;
-    k -= 1;
-    
-    double x = 0.0; 
-    for (int i = 0; i < 20; i++) {
-        double exp_x = MD_Math_EtoXPower(x);
-        double delta = (exp_x - b) / exp_x;
-        x -= delta;
-        if (MD_Math_Abs(delta) < 1e-10) break;
+    int k = 0;
+    while (x > 2.0) {
+        x /= 2.0;
+        k++;
     }
-    return x + k * 0.6931471805599453;
+
+    float t = x - 1.0;  
+    float result = 0.0;
+    float term = t;     
+    float sign = 1.0;  
+    int n = 1;           
+
+    while (n <= 12) {
+        double current = sign * term / n;
+        result += current;
+
+        term *= t;      
+        sign = -sign; 
+        n++;           
+    }
+
+    result += k * MD_MATH_LN2;
+
+    return result;
+    
 }
 
 float MD_Math_lgx(float x)
