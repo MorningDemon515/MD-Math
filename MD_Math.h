@@ -455,6 +455,13 @@ MD_MATH_VECTOR4 BasisVector4K = {0.0f,0.0f,1.0f,0.0f};
 
 MD_MATH_VECTOR4 BasisVector4W = {0.0f,0.0f,0.0f,1.0f};
 
+MD_MATH_MATRIX IdentityMatrix = {
+    1.0f,0.0f,0.0f,0.0f,
+    0.0f,1.0f,0.0f,0.0f,
+    0.0f,0.0f,1.0f,0.0f,
+    0.0f,0.0f,0.0f,1.0f
+};
+
 
 // About Vector--------------------------------------------------------------------------------
 bool MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
