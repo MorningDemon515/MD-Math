@@ -262,7 +262,7 @@ float MD_Math_EtoXPower(float x)
 float MD_Math_lnx(float x)
 {
     if (x <= 0.0) {
-        return 0.0 / 0.0;  // 返回 NaN
+        return 0.0; 
     }
 
     int k = 0;
@@ -422,25 +422,29 @@ float MD_Math_ComputeBallVolume(float radius)
     return 4.0f * MD_MATH_THIRD * MD_MATH_PI * radius * radius * radius;
 }
 
-typedef float MD_MATH_VECTOR2[2];
-typedef float MD_MATH_VECTOR3[3];
-typedef float MD_MATH_VECTOR4[4];
+typedef struct MD_MATH_VECTOR2
+{
+    float x,y;
+} MD_MATH_VECTOR2;
 
-/*
-typedef float MD_MATH_MATRIX2x2[4];
-typedef float MD_MATH_MATRIX2x3[6];
-typedef float MD_MATH_MATRIX2x4[8];
+typedef struct MD_MATH_VECTOR3
+{
+    float x,y,z;
+} MD_MATH_VECTOR3;
 
-typedef float MD_MATH_MATRIX3x2[6];
-typedef float MD_MATH_MATRIX3x3[9];
-typedef float MD_MATH_MATRIX3x4[12];
+typedef struct MD_MATH_VECTO4
+{
+    float x,y,z,w;
+} MD_MATH_VECTOR4;
 
-typedef float MD_MATH_MATRIX4x2[8];
-typedef float MD_MATH_MATRIX4x3[12];
-*/
-
-typedef float MD_MATH_MATRIX[16];//4x4
-
+typedef struct MD_MATH_MATRIX
+{
+    float _11, _12, _13, _14,
+          _21, _22, _23, _24,
+          _31, _32, _33, _34,
+          _41, _42, _43, _44;
+} MD_MATH_MATRIX;
+ 
 MD_MATH_VECTOR2 BasisVector2I = {1.0f,0.0f};
 MD_MATH_VECTOR2 BasisVector2J = {0.0f,1.0f};
 
@@ -467,8 +471,8 @@ MD_MATH_MATRIX IdentityMatrix = {
 bool MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
 {
     if(
-        MD_Math_Equal(v1[0],v2[0],MD_MATH_EPSILON) &&
-        MD_Math_Equal(v1[1],v2[1],MD_MATH_EPSILON)
+        MD_Math_Equal(v1.x,v2.x,MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1.y,v2.y,MD_MATH_EPSILON)
     )
     {
         return true;
@@ -482,9 +486,9 @@ bool MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
 bool MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
 {
     if(
-        MD_Math_Equal(v1[0],v2[0],MD_MATH_EPSILON) &&
-        MD_Math_Equal(v1[1],v2[1],MD_MATH_EPSILON) &&
-        MD_Math_Equal(v1[2],v2[2],MD_MATH_EPSILON) 
+        MD_Math_Equal(v1.x,v2.x,MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1.y,v2.y,MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1.z,v2.z,MD_MATH_EPSILON) 
     )
     {
         return true;
@@ -498,10 +502,10 @@ bool MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
 bool MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
 {
     if(
-        MD_Math_Equal(v1[0],v2[0],MD_MATH_EPSILON) &&
-        MD_Math_Equal(v1[1],v2[1],MD_MATH_EPSILON) &&
-        MD_Math_Equal(v1[2],v2[2],MD_MATH_EPSILON) &&
-        MD_Math_Equal(v1[3],v2[3],MD_MATH_EPSILON)
+        MD_Math_Equal(v1.x,v2.x,MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1.y,v2.y,MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1.z,v2.z,MD_MATH_EPSILON) &&
+        MD_Math_Equal(v1.w,v2.w,MD_MATH_EPSILON)
     )
     {
         return true;
@@ -512,124 +516,132 @@ bool MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
     }
 }
 
-void MD_Math_Vector2Addition(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2,MD_MATH_VECTOR2 result)
+MD_MATH_VECTOR2 MD_Math_Vector2Addition(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2)
 {
-    result[0] = v1[0] + v2[0];
-    result[1] = v1[1] + v2[1];
+    MD_MATH_VECTOR2 result;
+    result.x = v1.x + v2.x;
+    result.y = v1.y + v2.y;
+    return result;
 }
 
-void MD_Math_Vector3Addition(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2,MD_MATH_VECTOR3 result)
+MD_MATH_VECTOR3 MD_Math_Vector3Addition(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2)
 {
-    result[0] = v1[0] + v2[0];
-    result[1] = v1[1] + v2[1];
-    result[2] = v1[2] + v2[2];
+    MD_MATH_VECTOR3 result;
+    result.x = v1.x + v2.x;
+    result.y = v1.y + v2.y;
+    result.z = v1.z + v2.z;
+    return result;
 }
 
-void MD_Math_Vector4Addition(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2,MD_MATH_VECTOR4 result)
+MD_MATH_VECTOR4 MD_Math_Vector4Addition(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
 {
-    result[0] = v1[0] + v2[0];
-    result[1] = v1[1] + v2[1];
-    result[2] = v1[2] + v2[2];
-    result[3] = v1[3] + v2[3];
+    MD_MATH_VECTOR4 result;
+    result.x = v1.x + v2.x;
+    result.y = v1.y + v2.y;
+    result.z = v1.z + v2.z;
+    result.w = v1.w + v2.w;
+    return result;
 }
 
 void MD_Math_Vector2Multiplication(MD_MATH_VECTOR2 v,float x)
 {
-    v[0] = x * v[0];
-    v[1] = x * v[1];
+    v.x = x * v.x;
+    v.y = x * v.y;
 }
 
 void MD_Math_Vector3Multiplication(MD_MATH_VECTOR3 v,float x)
 {
-    v[0] = x * v[0];
-    v[1] = x * v[1];
-    v[2] = x * v[2];
+    v.x = x * v.x;
+    v.y = x * v.y;
+    v.z = x * v.z;
 }
 
 void MD_Math_Vector4Multiplication(MD_MATH_VECTOR4 v,float x)
 {
-    v[0] = x * v[0];
-    v[1] = x * v[1];
-    v[2] = x * v[2];
-    v[3] = x * v[3];
+    v.x = x * v.x;
+    v.y = x * v.y;
+    v.z = x * v.z;
+    v.w = x * v.w;
 }
 
 float MD_Math_ComputeVector2Length(MD_MATH_VECTOR2 v)
 {
-    return MD_Math_Hypot(v[0],v[1]);
+    return MD_Math_Hypot(v.x,v.y);
 }
 
 float MD_Math_ComputeVector3Length(MD_MATH_VECTOR3 v)
 {
-    return MD_Math_Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    return MD_Math_Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 float MD_Math_ComputeVector4Length(MD_MATH_VECTOR4 v)
 {
-    return MD_Math_Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);
+    return MD_Math_Sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
 
 void MD_Math_Vector2Normalized(MD_MATH_VECTOR2 v)
 {
-    v[0] = v[0] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1]); 
-    v[1] = v[1] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1]); 
+    v.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y); 
+    v.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y); 
 }
 
 void MD_Math_Vector3Normalized(MD_MATH_VECTOR3 v)
 {
-    v[0] = v[0] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2]); 
-    v[1] = v[1] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2]); 
-    v[2] = v[2] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2]); 
+    v.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
+    v.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
+    v.z = v.z * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
 }
 
 void MD_Math_Vector4Normalized(MD_MATH_VECTOR4 v)
 {
-    v[0] = v[0] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]); 
-    v[1] = v[1] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);
-    v[2] = v[2] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]); 
-    v[3] = v[3] * MD_Math_Rsqrt(v[0]*v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);  
+    v.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w); 
+    v.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+    v.z = v.z * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w); 
+    v.w = v.w * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w);  
 }
 
 float MD_Math_Vector2Dot(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
 {
     return 
-       v1[0] * v2[0] +
-       v1[1] * v2[1]
+       v1.x * v2.x +
+       v1.y * v2.y
     ;
 }
 
 float MD_Math_Vector3Dot(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
 {
     return 
-       v1[0] * v2[0] +
-       v1[1] * v2[1] +
-       v1[2] * v2[2]
+       v1.x * v2.x +
+       v1.y * v2.y +
+       v1.z * v2.z
     ;
 }
 
 float MD_Math_Vector4Dot(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
 {
     return 
-       v1[0] * v2[0] +
-       v1[1] * v2[1] +
-       v1[2] * v2[2] +
-       v1[3] * v2[3]
+       v1.x * v2.x +
+       v1.y * v2.y +
+       v1.z * v2.z +
+       v1.w * v2.w
     ;
 }
 
-void MD_Math_VectorCross(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2, MD_MATH_VECTOR3 r)
+MD_MATH_VECTOR3 MD_Math_VectorCross(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2)
 {
-    r[0] = v1[1] * v2[2] - v2[1] * v1[2];
-    r[1] = v1[2] * v2[0] - v2[2] * v1[0];
-    r[2] = v1[0] * v2[1] - v2[0] * v1[1];
+    MD_MATH_VECTOR3 r;
+    r.x = v1.y * v2.z - v2.y * v1.z;
+    r.y = v1.z * v2.x - v2.z * v1.x;
+    r.z = v1.x * v2.y - v2.x * v1.y;
+    return r;
 }
 
 float MD_Math_ProjectionOfVector2(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2)
 {
     return 
         MD_Math_ComputeVector2Length(v1) * 
-        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector2Dot(v1,v2) * MD_Math_Rsqrt(v1[0] * v1[0] + v1[1] * v1[1])*
-                                                                MD_Math_Rsqrt(v2[0]* v2[0] + v2[1]*v2[1] )))
+        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector2Dot(v1,v2) * MD_Math_Rsqrt(v1.x * v1.x + v1.y * v1.y)*
+                                                                MD_Math_Rsqrt(v2.x* v2.x + v2.y*v2.y )))
     ;
 }
 
@@ -637,8 +649,8 @@ float MD_Math_ProjectionOfVector3(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2)
 {
     return 
         MD_Math_ComputeVector3Length(v1) * 
-        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector3Dot(v1,v2) * MD_Math_Rsqrt(v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2])*
-                                                                MD_Math_Rsqrt(v2[0]* v2[0] + v2[1]*v2[1] + v2[2] * v2[2])))
+        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector3Dot(v1,v2) * MD_Math_Rsqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z)*
+                                                                MD_Math_Rsqrt(v2.x* v2.x + v2.y*v2.y + v2.z * v2.z)))
     ;
 }
 
@@ -646,199 +658,81 @@ float MD_Math_ProjectionOfVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
 {
     return 
         MD_Math_ComputeVector4Length(v1) * 
-        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector4Dot(v1,v2) * MD_Math_Rsqrt(v1[0] * v1[0] + v1[1] * v1[1]+ v1[2] * v1[2]+ v1[3] * v1[3])*
-                                                                MD_Math_Rsqrt(v2[0]* v2[0] + v2[1]*v2[1] + v1[2] * v1[2]+ v1[3] * v1[3])))
+        MD_Math_Cos(MD_Math_ArcCos(MD_Math_Vector4Dot(v1,v2) * MD_Math_Rsqrt(v1.x * v1.x + v1.y * v1.y+ v1.z * v1.z+ v1.w * v1.w)*
+                                                                MD_Math_Rsqrt(v2.x* v2.x + v2.y*v2.y + v1.z * v1.z+ v1.w * v1.w)))
     ;
 }
 
-void MD_Math_ProjectionVector2(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2, MD_MATH_VECTOR2 r)
+MD_MATH_VECTOR2 MD_Math_ProjectionVector2(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2)
 {
+    MD_MATH_VECTOR2 r;
     MD_Math_Vector2Normalized(r);
-    r[0] = MD_Math_ProjectionOfVector2(v1,v2) * r[0];
-    r[1] = MD_Math_ProjectionOfVector2(v1,v2) * r[1];
+    r.x = MD_Math_ProjectionOfVector2(v1,v2) * r.x;
+    r.y = MD_Math_ProjectionOfVector2(v1,v2) * r.y;
+    return r;
 }
 
-void MD_Math_ProjectionVector3(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2, MD_MATH_VECTOR3 r)
+MD_MATH_VECTOR3 MD_Math_ProjectionVector3(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2)
 {
+    MD_MATH_VECTOR3 r;
     MD_Math_Vector3Normalized(r);
-    r[0] = MD_Math_ProjectionOfVector3(v1,v2) * r[0];
-    r[1] = MD_Math_ProjectionOfVector3(v1,v2) * r[1];
-    r[2] = MD_Math_ProjectionOfVector3(v1,v2) * r[2];
+    r.x = MD_Math_ProjectionOfVector3(v1,v2) * r.x;
+    r.y = MD_Math_ProjectionOfVector3(v1,v2) * r.y;
+    r.z = MD_Math_ProjectionOfVector3(v1,v2) * r.z;
+    return r;
 }
 
-void MD_Math_ProjectionVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2, MD_MATH_VECTOR4 r)
+MD_MATH_VECTOR4 MD_Math_ProjectionVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
 {
+    MD_MATH_VECTOR4 r;
     MD_Math_Vector4Normalized(r);
-    r[0] = MD_Math_ProjectionOfVector4(v1,v2) * r[0];
-    r[1] = MD_Math_ProjectionOfVector4(v1,v2) * r[1];
-    r[2] = MD_Math_ProjectionOfVector4(v1,v2) * r[2];
-    r[3] = MD_Math_ProjectionOfVector4(v1,v2) * r[3];
+    r.x = MD_Math_ProjectionOfVector4(v1,v2) * r.x;
+    r.y = MD_Math_ProjectionOfVector4(v1,v2) * r.y;
+    r.z = MD_Math_ProjectionOfVector4(v1,v2) * r.z;
+    r.w = MD_Math_ProjectionOfVector4(v1,v2) * r.w;
+    return r;
 }
 //---------------------------------------------------------------------------------------------------------
 //About Matrix --------------------------------------------------------------------------------------------
 
 void MD_Math_VectorMulMatrix(MD_MATH_MATRIX m, MD_MATH_VECTOR4 v, MD_MATH_VECTOR4 r)
 {
-   r[0] = v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + v[3]*m[12];
-   r[1] = v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + v[3]*m[13];
-   r[2] = v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + v[3]*m[14];
-   r[3] = v[0] * m[3] + v[1] * m[7] + v[2] * m[11] + v[3]*m[15];
+   
 }
 
 void MD_Math_MatrixMulMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
 {
-    r[0] = m2[0] * m1[0] + m2[1] * m1[4] + m2[2] * m1[8] + m2[3] * m1[12] ;
-    r[1] = m2[0] * m1[1] + m2[1] * m1[5] + m2[2] * m1[9] + m2[3] * m1[13] ;
-    r[2] = m2[0] * m1[2] + m2[1] * m1[6] + m2[2] * m1[10] + m2[3] * m1[14] ;
-    r[3] = m2[0] * m1[3] + m2[1] * m1[7] + m2[2] * m1[11] + m2[3] * m1[15] ;
-
-    r[4] = m2[4] * m1[0] + m2[5] * m1[4] + m2[6] * m1[8] + m2[7] * m1[12] ;
-    r[5] = m2[4] * m1[1] + m2[5] * m1[5] + m2[6] * m1[9] + m2[7] * m1[13] ;
-    r[6] = m2[4] * m1[2] + m2[5] * m1[6] + m2[6] * m1[10] + m2[7] * m1[14] ;
-    r[7] = m2[4] * m1[3] + m2[5] * m1[7] + m2[6] * m1[11] + m2[7] * m1[15] ;
-
-    r[8] = m2[8] * m1[0] + m2[9] * m1[4] + m2[10] * m1[8] + m2[11] * m1[12] ;
-    r[9] = m2[8] * m1[1] + m2[9] * m1[5] + m2[10] * m1[9] + m2[11] * m1[13] ;
-    r[10] = m2[8] * m1[2] + m2[9] * m1[6] + m2[10] * m1[10] + m2[11] * m1[14] ;
-    r[11] = m2[8] * m1[3] + m2[9] * m1[7] + m2[10] * m1[11] + m2[11] * m1[15] ;
-
-    r[12] = m2[12] * m1[0] + m2[13] * m1[4] + m2[14] * m1[8] + m2[15] * m1[12] ;
-    r[13] = m2[12] * m1[1] + m2[13] * m1[5] + m2[14] * m1[9] + m2[15] * m1[13] ;
-    r[14] = m2[12] * m1[2] + m2[13] * m1[6] + m2[14] * m1[10] + m2[15] * m1[14] ;
-    r[15] = m2[12] * m1[3] + m2[13] * m1[7] + m2[14] * m1[11] + m2[15] * m1[15] ;
+    
 }
 
 
 void MD_Math_MatrixAddMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
 {
-    r[0] = m1[0] + m2[0];
-    r[1] = m1[1] + m2[1];
-    r[2] = m1[2] + m2[2];
-    r[3] = m1[3] + m2[3];
-
-    r[4] = m1[4] + m2[4];
-    r[5] = m1[5] + m2[5];
-    r[6] = m1[6] + m2[6];
-    r[7] = m1[7] + m2[7];
-
-    r[8] = m1[8] + m2[8];
-    r[9] = m1[9] + m2[9];
-    r[10] = m1[10] + m2[10];
-    r[11] = m1[11] + m2[11];
-
-    r[12] = m1[12] + m2[12];
-    r[13] = m1[13] + m2[13];
-    r[14] = m1[14] + m2[14];
-    r[15] = m1[15] + m2[15];
+   
 
 }
 
 void MD_Math_MatrixMultiplication(MD_MATH_MATRIX m,float x)
 {
-    m[0] = x * m[0];
-    m[1] = x * m[1];
-    m[2] = x * m[2];
-    m[3] = x * m[3];
-
-    m[4] = x * m[4];
-    m[5] = x * m[5];
-    m[6] = x * m[6];
-    m[7] = x * m[7];
-
-    m[8] = x * m[8];
-    m[9] = x * m[9];
-    m[10] = x * m[10];
-    m[11] = x * m[11];
-
-    m[12] = x * m[12];
-    m[13] = x * m[13];
-    m[14] = x * m[14];
-    m[15] = x * m[15];
+  
 }
 
 void MD_Math_MatrixTranspose(MD_MATH_MATRIX m)
 {
-    m[1] = m[4];
-    m[2] = m[8];
-    m[3] = m[12];
-
-    m[7] = m[13];
-    m[11] = m[14];
-
-    m[6] = m[9];
+  
 }
 
 void MD_Math_AdjointMatrix(MD_MATH_MATRIX m)
 {
-    float t[16];
-    for (int i = 0; i < 16; i++) {
-        t[i] = m[i];
-    }
 
-    #define DET3(a0,a1,a2, b0,b1,b2, c0,c1,c2) ( \
-        a0*(b1*c2 - b2*c1) - \
-        a1*(b0*c2 - b2*c0) + \
-        a2*(b0*c1 - b1*c0) )
-
-    m[0]  = DET3(t[5], t[6], t[7],  t[9], t[10], t[11],  t[13], t[14], t[15]);
-    m[4]  = -DET3(t[4], t[6], t[7],  t[8], t[10], t[11],  t[12], t[14], t[15]);
-    m[8]  = DET3(t[4], t[5], t[7],  t[8], t[9], t[11],  t[12], t[13], t[15]);
-    m[12] = -DET3(t[4], t[5], t[6],  t[8], t[9], t[10],  t[12], t[13], t[14]);
-    m[1]  = -DET3(t[1], t[2], t[3],  t[9], t[10], t[11],  t[13], t[14], t[15]);
-    m[5]  = DET3(t[0], t[2], t[3],  t[8], t[10], t[11],  t[12], t[14], t[15]);
-    m[9]  = -DET3(t[0], t[1], t[3],  t[8], t[9], t[11],  t[12], t[13], t[15]);
-    m[13] = DET3(t[0], t[1], t[2],  t[8], t[9], t[10],  t[12], t[13], t[14]);
-    m[2]  = DET3(t[1], t[2], t[3],  t[5], t[6], t[7],  t[13], t[14], t[15]);
-    m[6]  = -DET3(t[0], t[2], t[3],  t[4], t[6], t[7],  t[12], t[14], t[15]);
-    m[10] = DET3(t[0], t[1], t[3],  t[4], t[5], t[7],  t[12], t[13], t[15]);
-    m[14] = -DET3(t[0], t[1], t[2],  t[4], t[5], t[6],  t[12], t[13], t[14]);
-    m[3]  = -DET3(t[1], t[2], t[3],  t[5], t[6], t[7],  t[9], t[10], t[11]);
-    m[7]  = DET3(t[0], t[2], t[3],  t[4], t[6], t[7],  t[8], t[10], t[11]);
-    m[11] = -DET3(t[0], t[1], t[3],  t[4], t[5], t[7],  t[8], t[9], t[11]);
-    m[15] = DET3(t[0], t[1], t[2],  t[4], t[5], t[6],  t[8], t[9], t[10]);
-
-    #undef DET3
 }
 
 float MD_Math_DetMatrix(MD_MATH_MATRIX m)
 {
-
-    float m00 = m[0],  m01 = m[1],  m02 = m[2],  m03 = m[3];
-    float m10 = m[4],  m11 = m[5],  m12 = m[6],  m13 = m[7];
-    float m20 = m[8],  m21 = m[9],  m22 = m[10], m23 = m[11];
-    float m30 = m[12], m31 = m[13], m32 = m[14], m33 = m[15];
-
-    float det00 = m11 * (m22 * m33 - m23 * m32) 
-                - m12 * (m21 * m33 - m23 * m31) 
-                + m13 * (m21 * m32 - m22 * m31);
-
-    float det01 = m10 * (m22 * m33 - m23 * m32) 
-                - m12 * (m20 * m33 - m23 * m30) 
-                + m13 * (m20 * m32 - m22 * m30);
-
-    float det02 = m10 * (m21 * m33 - m23 * m31) 
-                - m11 * (m20 * m33 - m23 * m30) 
-                + m13 * (m20 * m31 - m21 * m30);
-
-    float det03 = m10 * (m21 * m32 - m22 * m31) 
-                - m11 * (m20 * m32 - m22 * m30) 
-                + m12 * (m20 * m31 - m21 * m30);
-
-    return m00 * det00 
-           - m01 * det01 
-           + m02 * det02 
-           - m03 * det03;
 }
 
 
 void MD_Math_InvMatrix(MD_MATH_MATRIX m)
 {
-    float m1[16];
-    for (int i = 0; i < 16; i++) {
-        m1[i] = m[i];
-    }
-
-    MD_Math_AdjointMatrix(m);
-    MD_Math_MatrixMultiplication(m , (1/MD_Math_DetMatrix(m1)));
-    MD_Math_MatrixTranspose(m);
+   
 }
