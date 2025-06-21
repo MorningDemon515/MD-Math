@@ -444,6 +444,19 @@ typedef struct MD_MATH_MATRIX
           _31, _32, _33, _34,
           _41, _42, _43, _44;
 } MD_MATH_MATRIX;
+
+typedef struct MD_MATH_MATRIX2x2
+{
+    float _11, _12, 
+          _21, _22;
+} MD_MATH_MATRIX2x2;
+
+typedef struct MD_MATH_MATRIX3x3
+{
+    float _11, _12, _13,
+          _21, _22, _23,
+          _31, _32, _33;
+} MD_MATH_MATRIX3x3;
  
 MD_MATH_VECTOR2 BasisVector2I = {1.0f,0.0f};
 MD_MATH_VECTOR2 BasisVector2J = {0.0f,1.0f};
@@ -695,44 +708,324 @@ MD_MATH_VECTOR4 MD_Math_ProjectionVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2
 //---------------------------------------------------------------------------------------------------------
 //About Matrix --------------------------------------------------------------------------------------------
 
-void MD_Math_VectorMulMatrix(MD_MATH_MATRIX m, MD_MATH_VECTOR4 v, MD_MATH_VECTOR4 r)
+MD_MATH_VECTOR4 MD_Math_VectorMulMatrix(MD_MATH_MATRIX m, MD_MATH_VECTOR4 v)
 {
-   
+   MD_MATH_VECTOR4 r;
+   r.x = v.x * m._11 + v.y * m._12 + v.z * m._13 + v.w * m._14;
+   r.y = v.x * m._21 + v.y * m._22 + v.z * m._23 + v.w * m._24;
+   r.z = v.x * m._31 + v.y * m._32 + v.z * m._33 + v.w * m._34;
+   r.w = v.x * m._41 + v.y * m._42 + v.z * m._43 + v.w * m._44;
+   return r;
 }
 
-void MD_Math_MatrixMulMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
+MD_MATH_MATRIX MD_Math_MatrixMulMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2)
 {
+    MD_MATH_MATRIX r;   
+    MD_MATH_VECTOR4 v1 ,v2 ,v3,v4,
+                    r1,r2,r3,r4;
+
+    v1.x = m2._11; v1.y = m2._21; v1.z = m2._31; v1.w = m2._41;
+    r1 = MD_Math_VectorMulMatrix(m1,v1);
+
+    r._11  = r1.x;
+    r._21  = r1.y;
+    r._31  = r1.z;
+    r._41  = r1.w;
     
+    v2.x = m2._12; v2.y = m2._22; v2.z = m2._32; v2.w = m2._42;
+    r2 = MD_Math_VectorMulMatrix(m1,v2);
+
+    r._12  = r2.x;
+    r._22  = r2.y;
+    r._32  = r2.z;
+    r._42  = r2.w;
+    
+    v3.x = m2._13; v3.y = m2._23; v3.z = m2._33; v3.w = m2._43;
+    r3 = MD_Math_VectorMulMatrix(m1,v3);
+
+    r._13  = r3.x;
+    r._23  = r3.y;
+    r._33  = r3.z;
+    r._43  = r3.w;
+    
+    v4.x = m2._14; v4.y = m2._24; v4.z = m2._34; v4.w = m2._44;
+    r4 = MD_Math_VectorMulMatrix(m1,v4);
+
+    r._14  = r4.x;
+    r._24  = r4.y;
+    r._34  = r4.z;
+    r._44  = r4.w;
+
+    return r;
+
 }
 
 
-void MD_Math_MatrixAddMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2, MD_MATH_MATRIX r)
+MD_MATH_MATRIX MD_Math_MatrixAddMatrix(MD_MATH_MATRIX m1,MD_MATH_MATRIX m2)
 {
+    MD_MATH_MATRIX r;
+    r._11 = m1._11 + m2._11;
+    r._21 = m1._21 + m2._21;
+    r._31 = m1._31 + m2._31;
+    r._41 = m1._41 + m2._41;
+
+    r._12 = m1._12 + m2._12;
+    r._22 = m1._22 + m2._22;
+    r._32 = m1._32 + m2._32;
+    r._42 = m1._42 + m2._42;
+    
+    r._13 = m1._13 + m2._13;
+    r._23 = m1._23 + m2._23;
+    r._33 = m1._33 + m2._33;
+    r._43 = m1._43 + m2._43;
+
+    r._14 = m1._14 + m2._14;
+    r._24 = m1._24 + m2._24;
+    r._34 = m1._34 + m2._34;
+    r._44 = m1._44 + m2._44;
+
+    return r;
+}
+
+MD_MATH_MATRIX MD_Math_MatrixMultiplication(MD_MATH_MATRIX m,float x)
+{
+    MD_MATH_MATRIX r;
+    r._11 = x * m._11; 
+    r._21 = x * m._21; 
+    r._31 = x * m._31; 
+    r._41 = x * m._41; 
+
+    r._12 = x * m._12; 
+    r._22 = x * m._22; 
+    r._32 = x * m._32; 
+    r._42 = x * m._42; 
+
+    r._13 = x * m._13; 
+    r._23 = x * m._23; 
+    r._33 = x * m._33; 
+    r._43 = x * m._43; 
+
+    r._14 = x * m._14; 
+    r._24 = x * m._24; 
+    r._34 = x * m._34; 
+    r._44 = x * m._44; 
+
+    return r;
+}
+
+MD_MATH_MATRIX MD_Math_MatrixTranspose(MD_MATH_MATRIX m)
+{
+    MD_MATH_MATRIX r;
+
+    r._11 = m._11;
+    r._21 = m._12;
+    r._31 = m._13;
+    r._41 = m._14;
+
+    r._12 = m._21;
+    r._22 = m._22;
+    r._32 = m._23;
+    r._42 = m._24;
+
+    r._13 = m._31;
+    r._23 = m._32;
+    r._33 = m._33;
+    r._43 = m._34;
+
+    r._14 = m._41;
+    r._24 = m._42;
+    r._34 = m._43;
+    r._44 = m._44;
+    
+    return r;
+}
+
+float MD_Math_DetMatrix2x2(MD_MATH_MATRIX2x2 m)
+{
+    return m._11 * m._22 - m._12 * m._21;
+}
+
+float MD_Math_DetMatrix3x3(MD_MATH_MATRIX3x3 m)
+{
+    MD_MATH_MATRIX2x2 m1 = {m._22,m._23,
+                            m._32,m._33};
+
+    MD_MATH_MATRIX2x2 m2 = {m._21,m._23,
+                            m._31,m._33};
+
+    MD_MATH_MATRIX2x2 m3 = {m._21,m._22,
+                            m._31,m._32};
+
+    return m._11 * MD_Math_DetMatrix2x2(m1) - m._12 * MD_Math_DetMatrix2x2(m2) + m._13 * MD_Math_DetMatrix2x2(m3);  
+}
+
+float MD_Math_DetMatrix4x4(MD_MATH_MATRIX m)
+{
+    MD_MATH_MATRIX3x3 m1 = {m._22,m._23,m._24,
+                            m._32,m._33,m._34,
+                            m._42,m._43,m._44};       
+
+    MD_MATH_MATRIX3x3 m2 = {m._21,m._23,m._24,
+                            m._31,m._33,m._34,
+                            m._41,m._43,m._44};
+
+    MD_MATH_MATRIX3x3 m3 = {m._21,m._22,m._24,
+                            m._31,m._32,m._34,
+                            m._41,m._42,m._44};      
+
+    MD_MATH_MATRIX3x3 m4 = {m._21,m._22,m._23,
+                            m._31,m._32,m._33,
+                            m._41,m._42,m._43};
+
+    return m._11 * MD_Math_DetMatrix3x3(m1) - m._12 * MD_Math_DetMatrix3x3(m2) + m._13 * MD_Math_DetMatrix3x3(m3) - m._14 *MD_Math_DetMatrix3x3(m4);                                                                                                                                                
+}
+
+MD_MATH_MATRIX MD_Math_AdjointMatrix(MD_MATH_MATRIX m)
+{
+    MD_MATH_MATRIX rm;
+    MD_MATH_MATRIX adj;      
+ 
+    MD_MATH_MATRIX3x3 m1 = {m._22, m._23,m._24,
+                            m._32,m._33,m._34,
+                            m._42,m._43,m._44};
+    MD_MATH_MATRIX3x3 m2 = {m._21,m._23,m._24,
+                            m._31,m._33,m._34,
+                            m._41,m._43,m._44};
+    MD_MATH_MATRIX3x3 m3 = {m._21,m._22,m._24,
+                            m._31,m._32,m._34,
+                            m._41,m._42,m._44};
+    MD_MATH_MATRIX3x3 m4 = {m._21,m._22,m._23,
+                            m._31,m._32,m._33,
+                            m._41,m._42,m._43};
+
+    MD_MATH_MATRIX3x3 m5 = {m._12,m._13,m._14,
+                            m._32,m._33,m._34,
+                            m._42,m._43,m._44};
+    MD_MATH_MATRIX3x3 m6 = {m._11,m._13,m._14,
+                            m._31,m._33,m._34,
+                            m._41,m._43,m._44};
+    MD_MATH_MATRIX3x3 m7 = {m._11,m._12,m._14,
+                            m._31,m._32,m._34,
+                            m._41,m._42,m._44};
+    MD_MATH_MATRIX3x3 m8 = {m._11,m._12,m._13,
+                            m._31,m._32,m._33,
+                            m._41,m._42,m._43};
+
+    MD_MATH_MATRIX3x3 m9 = {m._12,m._13,m._14,
+                            m._22,m._23,m._24,
+                            m._42,m._43,m._44};
+    MD_MATH_MATRIX3x3 m10 = {m._12,m._13,m._14,
+                             m._21,m._23,m._24,
+                             m._41,m._43,m._44};
+    MD_MATH_MATRIX3x3 m11 = {m._11,m._12,m._14,
+                             m._21,m._22,m._24,
+                             m._41,m._42,m._44};
+    MD_MATH_MATRIX3x3 m12 = {m._11,m._12,m._13,
+                             m._21,m._22,m._23,
+                             m._41,m._42,m._43};
+
+    MD_MATH_MATRIX3x3 m13 = {m._12,m._13,m._14,
+                             m._22,m._23,m._24,
+                             m._32,m._33,m._34};
+    MD_MATH_MATRIX3x3 m14 = {m._11,m._13,m._14,
+                             m._21,m._23,m._24,
+                             m._31,m._33,m._34};
+    MD_MATH_MATRIX3x3 m15 = {m._11,m._12,m._14,
+                             m._21,m._22,m._24,
+                             m._31,m._32,m._34};
+    MD_MATH_MATRIX3x3 m16 = {m._11,m._12,m._13,
+                             m._21,m._22,m._23,
+                             m._31,m._32,m._33};
+
+    rm._11 = MD_Math_DetMatrix3x3(m1);
+    rm._12 = (-1) * MD_Math_DetMatrix3x3(m2);
+    rm._13 = MD_Math_DetMatrix3x3(m3);
+    rm._14 = (-1) * MD_Math_DetMatrix3x3(m4);
+
+    rm._21 = (-1) * MD_Math_DetMatrix3x3(m5);
+    rm._22 = MD_Math_DetMatrix3x3(m6);
+    rm._23 = (-1) * MD_Math_DetMatrix3x3(m7);
+    rm._24 = MD_Math_DetMatrix3x3(m8);
+
+    rm._31 = MD_Math_DetMatrix3x3(m9);
+    rm._32 = (-1) * MD_Math_DetMatrix3x3(m10);
+    rm._33 = MD_Math_DetMatrix3x3(m11);
+    rm._34 = (-1) * MD_Math_DetMatrix3x3(m12);
+
+    rm._41 = (-1) * MD_Math_DetMatrix3x3(m13);
+    rm._42 = MD_Math_DetMatrix3x3(m14);
+    rm._43 = (-1) * MD_Math_DetMatrix3x3(m15);
+    rm._44 = MD_Math_DetMatrix3x3(m16);
+
+    adj._11 = rm._11;
+    adj._12 = rm._21;
+    adj._13 = rm._31;
+    adj._14 = rm._41;
+
+    adj._21 = rm._12;
+    adj._22 = rm._22;
+    adj._23 = rm._32;
+    adj._24 = rm._42;
+
+    adj._31 = rm._13;
+    adj._32 = rm._23;
+    adj._33 = rm._33;
+    adj._34 = rm._43;
+
+    adj._41 = rm._14;
+    adj._42 = rm._24;
+    adj._43 = rm._34;
+    adj._44 = rm._44;
+
+    return adj;
+}
+
+MD_MATH_MATRIX MD_Math_InvMatrix(MD_MATH_MATRIX m)
+{
+   MD_MATH_MATRIX Inv,adj;
    
+   float det = MD_Math_DetMatrix4x4(m);
 
+   if(MD_Math_Abs(det) < MD_MATH_EPSILON)
+   {
+    return IdentityMatrix;
+   }
+
+   float _1det = 1.0f / det;
+   adj = MD_Math_AdjointMatrix(m);
+
+   Inv = MD_Math_MatrixMultiplication(adj,_1det);
+    
+    return Inv;
 }
 
-void MD_Math_MatrixMultiplication(MD_MATH_MATRIX m,float x)
+bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2)
 {
-  
-}
+    if(
+        MD_Math_Equal(m1._11,m2._11,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._21,m2._21,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._31,m2._31,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._41,m2._41,MD_MATH_EPSILON) &&
 
-void MD_Math_MatrixTranspose(MD_MATH_MATRIX m)
-{
-  
-}
+        MD_Math_Equal(m1._12,m2._12,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._22,m2._22,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._32,m2._32,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._42,m2._42,MD_MATH_EPSILON) &&
 
-void MD_Math_AdjointMatrix(MD_MATH_MATRIX m)
-{
+        MD_Math_Equal(m1._13,m2._13,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._23,m2._23,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._33,m2._33,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._43,m2._43,MD_MATH_EPSILON) &&
 
-}
-
-float MD_Math_DetMatrix(MD_MATH_MATRIX m)
-{
-}
-
-
-void MD_Math_InvMatrix(MD_MATH_MATRIX m)
-{
-   
+        MD_Math_Equal(m1._14,m2._14,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._24,m2._24,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._34,m2._34,MD_MATH_EPSILON) &&
+        MD_Math_Equal(m1._44,m2._44,MD_MATH_EPSILON) 
+    )
+    {
+        return true;
+    }
+    else{
+        return false;
+    }
 }
