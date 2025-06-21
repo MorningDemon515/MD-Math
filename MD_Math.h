@@ -556,25 +556,31 @@ MD_MATH_VECTOR4 MD_Math_Vector4Addition(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
     return result;
 }
 
-void MD_Math_Vector2Multiplication(MD_MATH_VECTOR2 v,float x)
+MD_MATH_VECTOR2 MD_Math_Vector2Multiplication(MD_MATH_VECTOR2 v,float x)
 {
-    v.x = x * v.x;
-    v.y = x * v.y;
+    MD_MATH_VECTOR2 r;
+    r.x = x * v.x;
+    r.y = x * v.y;
+    return r;
 }
 
-void MD_Math_Vector3Multiplication(MD_MATH_VECTOR3 v,float x)
+MD_MATH_VECTOR3 MD_Math_Vector3Multiplication(MD_MATH_VECTOR3 v,float x)
 {
-    v.x = x * v.x;
-    v.y = x * v.y;
-    v.z = x * v.z;
+    MD_MATH_VECTOR3 r;
+    r.x = x * v.x;
+    r.y = x * v.y;
+    r.z = x * v.z;
+    return r;
 }
 
-void MD_Math_Vector4Multiplication(MD_MATH_VECTOR4 v,float x)
+MD_MATH_VECTOR4 MD_Math_Vector4Multiplication(MD_MATH_VECTOR4 v,float x)
 {
-    v.x = x * v.x;
-    v.y = x * v.y;
-    v.z = x * v.z;
-    v.w = x * v.w;
+    MD_MATH_VECTOR4 r;
+    r.x = x * v.x;
+    r.y = x * v.y;
+    r.z = x * v.z;
+    r.w = x * v.w;
+    return r;
 }
 
 float MD_Math_ComputeVector2Length(MD_MATH_VECTOR2 v)
@@ -592,25 +598,31 @@ float MD_Math_ComputeVector4Length(MD_MATH_VECTOR4 v)
     return MD_Math_Sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
 
-void MD_Math_Vector2Normalized(MD_MATH_VECTOR2 v)
+MD_MATH_VECTOR2 MD_Math_Vector2Normalized(MD_MATH_VECTOR2 v)
 {
-    v.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y); 
-    v.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y); 
+    MD_MATH_VECTOR2 r;
+    r.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y); 
+    r.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y); 
+    return r;
 }
 
-void MD_Math_Vector3Normalized(MD_MATH_VECTOR3 v)
+MD_MATH_VECTOR3 MD_Math_Vector3Normalized(MD_MATH_VECTOR3 v)
 {
-    v.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
-    v.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
-    v.z = v.z * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
+    MD_MATH_VECTOR3 r;
+    r.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
+    r.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
+    r.z = v.z * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z); 
+    return r;
 }
 
-void MD_Math_Vector4Normalized(MD_MATH_VECTOR4 v)
+MD_MATH_VECTOR4 MD_Math_Vector4Normalized(MD_MATH_VECTOR4 v)
 {
-    v.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w); 
-    v.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w);
-    v.z = v.z * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w); 
-    v.w = v.w * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w);  
+    MD_MATH_VECTOR4 r;
+    r.x = v.x * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w); 
+    r.y = v.y * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+    r.z = v.z * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w); 
+    r.w = v.w * MD_Math_Rsqrt(v.x*v.x + v.y * v.y + v.z * v.z + v.w * v.w);  
+    return r;
 }
 
 float MD_Math_Vector2Dot(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
@@ -1029,3 +1041,39 @@ bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2)
         return false;
     }
 }
+
+//Plane-------------------------------------------------------------------------------
+
+typedef struct MD_MATH_PLANE  
+{
+    float a,b,c,d;
+} MD_MATH_PLANE;
+
+MD_MATH_PLANE MD_Math_PlaneFromPointAndNormal(MD_MATH_VECTOR3 Point,MD_MATH_VECTOR3 Normal)
+{
+    MD_MATH_PLANE plane;
+    plane.a = Point.x;
+    plane.b = Point.y;
+    plane.c = Point.z;
+    plane.d = (-1.0f) * MD_Math_Vector3Dot(Normal,Point);
+
+    return plane;
+}
+
+MD_MATH_PLANE MD_Math_PlaneFromPoints(MD_MATH_VECTOR3 p0,
+                                      MD_MATH_VECTOR3 p1,
+                                      MD_MATH_VECTOR3 p2)
+{
+    MD_MATH_PLANE plane;
+    MD_MATH_VECTOR3 u = MD_Math_Vector3Addition(p1,MD_Math_Vector3Multiplication(p0,(-1.0f)));
+    MD_MATH_VECTOR3 v = MD_Math_Vector3Addition(p2,MD_Math_Vector3Multiplication(p0,(-1.0f)));
+    MD_MATH_VECTOR3 n = MD_Math_VectorCross(u,v);
+
+    plane.a = n.x;
+    plane.b = n.y;
+    plane.c = n.z;
+    plane.d = (-1.0f) * MD_Math_Vector3Dot(n,p0);
+
+    return plane;
+}
+
