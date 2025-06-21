@@ -1077,3 +1077,97 @@ MD_MATH_PLANE MD_Math_PlaneFromPoints(MD_MATH_VECTOR3 p0,
     return plane;
 }
 
+float MD_Math_PlaneDot(MD_MATH_PLANE p, MD_MATH_VECTOR3 v)
+{
+    MD_MATH_VECTOR3 n;
+    float r;
+    n.x = p.a;
+    n.y = p.b;
+    n.y = p.c;
+
+    r = MD_Math_Vector3Dot(n,v) + p.d;
+    return r;
+}
+
+MD_MATH_PLANE MD_Math_PlaneNormalize(MD_MATH_PLANE p)
+{
+    MD_MATH_PLANE r;
+    float nn;
+
+    nn = MD_Math_Rsqrt(p.a * p.a + p.b * p.b + p.c * p.c);
+
+    r.a = nn * p.a;
+    r.b = nn * p.b;
+    r.c = nn * p.c;
+    r.d = nn * p.d;
+
+    return r;
+    
+}
+
+MD_MATH_PLANE MD_Math_PlaneTransform(MD_MATH_PLANE p, MD_MATH_MATRIX m)
+{
+    MD_MATH_PLANE r;
+    MD_MATH_VECTOR4 pp;
+    p = MD_Math_PlaneNormalize(p);
+
+    pp.x = p.a;
+    pp.y = p.b;
+    pp.z = p.c;
+    pp.w = p.d;
+
+    m = MD_Math_InvMatrix(m);
+    m = MD_Math_MatrixTranspose(m);
+
+    pp = MD_Math_VectorMulMatrix(m,pp);
+
+    r.a = pp.x;
+    r.b = pp.y;
+    r.c = pp.z;
+    r.d = pp.w;
+
+    return r;
+}
+
+//Ray-----------------------------------------------------------------
+
+typedef struct MD_MATH_RAY
+{
+    MD_MATH_VECTOR3 p0,u;
+} MD_MATH_RAY;
+
+
+MD_MATH_VECTOR3 MD_Math_CreateRay(MD_MATH_RAY ray,float t)
+{
+    MD_MATH_VECTOR3 r;
+
+    if(t < 0.0f)
+    {
+        r.x = 0.0f;
+        r.y = 0.0f;
+        r.z = 0.0f;
+        return r;
+    }
+
+    r = MD_Math_Vector3Addition(ray.p0,MD_Math_Vector3Multiplication(ray.u,t));
+
+    return r;
+
+}
+
+MD_MATH_VECTOR3 MD_Math_Intersection(MD_MATH_RAY ray, MD_MATH_PLANE p)
+{
+    MD_MATH_VECTOR3 r;
+    MD_MATH_VECTOR3 n;
+    n.x = p.a;
+    n.y = p.b;
+    n.z = p.c;
+    float t;
+
+    t = ((-1) * p.d - MD_Math_Vector3Dot(n,ray.p0))/(MD_Math_Vector3Dot(n,ray.u));
+
+    r = MD_Math_Vector3Addition(ray.p0,MD_Math_Vector3Multiplication(ray.u,t));
+
+    return r;
+}
+
