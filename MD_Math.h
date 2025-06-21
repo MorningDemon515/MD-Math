@@ -1171,3 +1171,66 @@ MD_MATH_VECTOR3 MD_Math_Intersection(MD_MATH_RAY ray, MD_MATH_PLANE p)
     return r;
 }
 
+MD_MATH_MATRIX MD_Math_ScaleMatrix(float x, float y, float z)
+{
+    MD_MATH_MATRIX r = {
+        x,0.0f,0.0f,0.0f,
+        0.0f,y,0.0f,0.0f,
+        0.0f,0.0f,z,0.0f,
+        0.0f,0.0f,0.0f,1.0f
+    };
+
+    return r;
+}
+
+MD_MATH_MATRIX MD_Math_TranslationMatrix(float x, float y, float z)
+{
+    MD_MATH_MATRIX r = {
+        1.0f, 0.0f ,0.0f ,x,
+        0.0f, 1.0f, 0.0f, y,
+        0.0f, 0.0f, 1.0f ,z,
+        0.0f, 0.0f, 0.0f ,1.0f
+    };
+
+    return r;
+}
+
+MD_MATH_MATRIX MD_Math_RotationMatrix(float Angle, char Axis)
+{
+    switch (Axis)
+    {
+    case 'X':
+        MD_MATH_MATRIX xr = {
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, MD_Math_Cos(Angle),(-1) * MD_Math_Sin(Angle), 0.0f,
+            0.0f, MD_Math_Sin(Angle),MD_Math_Cos(Angle), 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+        return xr;
+        break;
+
+    case 'Y':
+        MD_MATH_MATRIX yr = {
+            MD_Math_Cos(Angle), 0.0f, MD_Math_Sin(Angle), 0.0f,
+            0.0f , 1.0f , 0.0f, 0.0f ,
+            (-1) * MD_Math_Sin(Angle), 0.0f, MD_Math_Cos(Angle), 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+        return yr;
+        break;
+
+    case 'Z':
+        MD_MATH_MATRIX zr = {
+            MD_Math_Cos(Angle), (-1) * MD_Math_Sin(Angle) , 0.0f, 0.0f,
+            MD_Math_Sin(Angle), MD_Math_Cos(Angle), 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f ,1.0f
+        };
+        return zr;
+        break;        
+    
+    default:
+        return IdentityMatrix;
+        break;
+    }
+}
