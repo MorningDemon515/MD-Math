@@ -1197,40 +1197,37 @@ MD_MATH_MATRIX MD_Math_TranslationMatrix(float x, float y, float z)
 
 MD_MATH_MATRIX MD_Math_RotationMatrix(float Angle, char Axis)
 {
-    switch (Axis)
-    {
-    case 'X':
-        MD_MATH_MATRIX xr = {
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, MD_Math_Cos(Angle),(-1) * MD_Math_Sin(Angle), 0.0f,
-            0.0f, MD_Math_Sin(Angle),MD_Math_Cos(Angle), 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f
-        };
-        return xr;
-        break;
-
-    case 'Y':
-        MD_MATH_MATRIX yr = {
-            MD_Math_Cos(Angle), 0.0f, MD_Math_Sin(Angle), 0.0f,
-            0.0f , 1.0f , 0.0f, 0.0f ,
-            (-1) * MD_Math_Sin(Angle), 0.0f, MD_Math_Cos(Angle), 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f
-        };
-        return yr;
-        break;
-
-    case 'Z':
-        MD_MATH_MATRIX zr = {
-            MD_Math_Cos(Angle), (-1) * MD_Math_Sin(Angle) , 0.0f, 0.0f,
-            MD_Math_Sin(Angle), MD_Math_Cos(Angle), 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f ,1.0f
-        };
-        return zr;
-        break;        
-    
-    default:
-        return IdentityMatrix;
-        break;
-    }
+	
+	if(Axis == 'X')
+	{
+		MD_MATH_MATRIX xr = {
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, MD_Math_Cos(Angle),(-1) * MD_Math_Sin(Angle), 0.0f,
+			0.0f, MD_Math_Sin(Angle),MD_Math_Cos(Angle), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
+		return xr;
+	}
+	else if('Y'){
+		MD_MATH_MATRIX yr = {
+			MD_Math_Cos(Angle), 0.0f, MD_Math_Sin(Angle), 0.0f,
+			0.0f , 1.0f , 0.0f, 0.0f ,
+			(-1) * MD_Math_Sin(Angle), 0.0f, MD_Math_Cos(Angle), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
+		return yr;
+	}
+	else if('Z'){
+		MD_MATH_MATRIX zr = {
+			MD_Math_Cos(Angle), (-1) * MD_Math_Sin(Angle) , 0.0f, 0.0f,
+			MD_Math_Sin(Angle), MD_Math_Cos(Angle), 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f ,1.0f
+		};
+		return zr;
+	}
+	else
+	{
+		return IdentityMatrix;
+	}
 }
