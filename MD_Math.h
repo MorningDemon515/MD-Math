@@ -1,7 +1,6 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
 
 const float MD_MATH_PI = 3.14159265358979323846f;//26433832795028841971693993751058209749445923078164062862089986280348253421170679f;
@@ -171,7 +170,7 @@ float MD_Math_Hypot(float x,float y)
 
 float MD_Math_Factorial(float number)
 {
-    unsigned long long factorial = 1;
+    int factorial = 1;
  
     for(int i = 1; i <=number; ++i)
     {
@@ -690,32 +689,20 @@ float MD_Math_ProjectionOfVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
 
 MD_MATH_VECTOR2 MD_Math_ProjectionVector2(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2)
 {
-    MD_MATH_VECTOR2 r;
-    MD_Math_Vector2Normalized(r);
-    r.x = MD_Math_ProjectionOfVector2(v1,v2) * r.x;
-    r.y = MD_Math_ProjectionOfVector2(v1,v2) * r.y;
-    return r;
+    MD_MATH_VECTOR2 r = MD_Math_Vector2Normalized(v2);
+    return MD_Math_Vector2Multiplication(r, MD_Math_ProjectionOfVector2(v1,v2));
 }
 
 MD_MATH_VECTOR3 MD_Math_ProjectionVector3(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2)
 {
-    MD_MATH_VECTOR3 r;
-    MD_Math_Vector3Normalized(r);
-    r.x = MD_Math_ProjectionOfVector3(v1,v2) * r.x;
-    r.y = MD_Math_ProjectionOfVector3(v1,v2) * r.y;
-    r.z = MD_Math_ProjectionOfVector3(v1,v2) * r.z;
-    return r;
+    MD_MATH_VECTOR3 r = MD_Math_Vector3Normalized(v2);
+    return MD_Math_Vector3Multiplication(r, MD_Math_ProjectionOfVector3(v1,v2));
 }
 
 MD_MATH_VECTOR4 MD_Math_ProjectionVector4(MD_MATH_VECTOR4 v1, MD_MATH_VECTOR4 v2)
 {
-    MD_MATH_VECTOR4 r;
-    MD_Math_Vector4Normalized(r);
-    r.x = MD_Math_ProjectionOfVector4(v1,v2) * r.x;
-    r.y = MD_Math_ProjectionOfVector4(v1,v2) * r.y;
-    r.z = MD_Math_ProjectionOfVector4(v1,v2) * r.z;
-    r.w = MD_Math_ProjectionOfVector4(v1,v2) * r.w;
-    return r;
+    MD_MATH_VECTOR4 r = MD_Math_Vector4Normalized(v2);
+    return MD_Math_Vector4Multiplication(r, MD_Math_ProjectionOfVector4(v1,v2));
 }
 //---------------------------------------------------------------------------------------------------------
 //About Matrix --------------------------------------------------------------------------------------------
