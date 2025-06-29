@@ -1,4 +1,4 @@
-#include <iostream>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -172,12 +172,12 @@ float MD_Math_Factorial(float number)
 {
     int factorial = 1;
  
-    for(int i = 1; i <=number; ++i)
+    for(int i = 1; i <=(int)number; ++i)
     {
         factorial *= i;
     }
 
-    return factorial;
+    return (float)factorial;
     
 }
 
@@ -215,10 +215,10 @@ float MD_Math_ArcSin(float x)
     return x + 
             0.1666666667f * x * x * x +
             0.075f * x * x * x * x * x +
-            0.04464285714 * x * x * x * x * x * x * x +
-            0.03038194444 * x * x * x * x * x * x * x * x * x +
-            0.02237215909 * x * x * x * x * x * x * x * x * x * x * x +
-            0.01735276442 * x * x * x * x * x * x * x * x * x * x * x * x * x;
+            0.04464285714f * x * x * x * x * x * x * x +
+            0.03038194444f * x * x * x * x * x * x * x * x * x +
+            0.02237215909f * x * x * x * x * x * x * x * x * x * x * x +
+            0.01735276442f * x * x * x * x * x * x * x * x * x * x * x * x * x;
 }
 
 float MD_Math_ArcCos(float x)
@@ -270,7 +270,7 @@ float MD_Math_lnx(float x)
         k++;
     }
 
-    float t = x - 1.0;  
+    float t = x - 1.0f;  
     float result = 0.0;
     float term = t;     
     float sign = 1.0;  
@@ -278,7 +278,7 @@ float MD_Math_lnx(float x)
 
     while (n <= 12) {
         double current = sign * term / n;
-        result += current;
+        result += (float)current;
 
         term *= t;      
         sign = -sign; 
