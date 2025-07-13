@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <stdbool.h>
+//#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -103,7 +103,7 @@ float MD_Math_Sec(float x);
 
 float MD_Math_Csc(float x);
 
-bool MD_Math_Equal(float a,float b, float epsilon);
+int MD_Math_Equal(float a,float b, float epsilon);
 
 float MD_Math_EtoXPower(float x);
 
@@ -209,11 +209,11 @@ extern const MD_MATH_MATRIX MD_Math_IdentityMatrix;
 
 
 // About Vector--------------------------------------------------------------------------------
-bool MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2);
+int MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2);
 
-bool MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2);
+int MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2);
 
-bool MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2);
+int MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2);
 
 MD_MATH_VECTOR2 MD_Math_Vector2Addition(MD_MATH_VECTOR2 v1, MD_MATH_VECTOR2 v2);
 MD_MATH_VECTOR3 MD_Math_Vector3Addition(MD_MATH_VECTOR3 v1, MD_MATH_VECTOR3 v2);
@@ -278,7 +278,7 @@ MD_MATH_MATRIX MD_Math_AdjointMatrix(MD_MATH_MATRIX m);
 
 MD_MATH_MATRIX MD_Math_InvMatrix(MD_MATH_MATRIX m);
 
-bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2);
+int MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2);
 
 void MD_Math_MatrixToValue(MD_MATH_MATRIX m, float* out);
 

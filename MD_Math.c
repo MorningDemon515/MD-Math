@@ -71,10 +71,11 @@ float MD_Math_Abs(float number)
 
 float MD_Math_Mod(float number1, float number2)
 {
+	int y = 0;
     if(number2 == 0.0f)
         return 0.0f;
     
-    int y = (int)(number1 / number2);
+    y = (int)(number1 / number2);
     return number1 - (float)y * number2;
 }
 
@@ -164,8 +165,8 @@ float MD_Math_Hypot(float x,float y)
 float MD_Math_Factorial(float number)
 {
     int factorial = 1;
- 
-    for(int i = 1; i <=(int)number; ++i)
+    int i;
+    for(i = 1; i <=(int)number; ++i)
     {
         factorial *= i;
     }
@@ -177,8 +178,8 @@ float MD_Math_Factorial(float number)
 float MD_Math_Pow(float x, int y)
 {
     float r = 1.0f ;
-
-    for (int i = 1; i <= y; i++)
+    int i;
+    for (i = 1; i <= y; i++)
     {
         r = r * x;
     }
@@ -188,6 +189,13 @@ float MD_Math_Pow(float x, int y)
 
 float MD_Math_Sin(float x)
 {
+	float x2 = x * x;
+    float term = x;
+    float y = term;
+    
+	int i;
+
+	float sign = 1.0f;
  
     if (MD_Math_Abs(x) < 1e-5f) return x;
     
@@ -199,7 +207,7 @@ float MD_Math_Sin(float x)
     if (MD_Math_Abs(x - MD_MATH_PI) < 1e-5f) return 0.0f;
     if (MD_Math_Abs(x - 3*MD_MATH_PI_2) < 1e-5f) return -1.0f;
     
-    float sign = 1.0f;
+    
     if (x > MD_MATH_PI) {
         x -= MD_MATH_PI;
         sign = -1.0f;
@@ -207,12 +215,8 @@ float MD_Math_Sin(float x)
     if (x > MD_MATH_PI_2) {
         x = MD_MATH_PI - x;
     }
-    
-    float x2 = x * x;
-    float term = x;
-    float y = term;
-    
-    for (int i = 1; i < 5; i++) {
+   
+    for (i = 1; i < 5; i++) {
         term = term * (-x2) / ((2*i) * (2*i+1));
         y += term;
         if (MD_Math_Abs(term) < 1e-7f) break; 
@@ -223,13 +227,14 @@ float MD_Math_Sin(float x)
 
 float MD_Math_Cos(float x) {
 
-    x = MD_Math_Mod(x, MD_MATH_2PI);
-    if (x < 0) x += MD_MATH_2PI;
-
     float term = 1.0f;  
-    float y = term;     
+    float y = term;  
+	int i;
 
-    for (int i = 1; i < 6; i++) {
+    x = MD_Math_Mod(x, MD_MATH_2PI);
+    if (x < 0) x += MD_MATH_2PI;   
+
+    for (i = 1; i < 6; i++) {
         term = term * (-x * x) / ((2 * i) * (2 * i - 1));
         y += term;
     }
@@ -248,6 +253,13 @@ float MD_Math_Cot(float x)
 
 float MD_Math_ArcSin(float x)
 {
+    float sign = 1.0f;
+
+	float x2 = x * x;
+    float term = x; 
+    float y = term;
+
+    float n = 1.0f;
 
     if (x < -1.0f || x > 1.0f) {
         return 0.0f; 
@@ -257,7 +269,6 @@ float MD_Math_ArcSin(float x)
     if (x == 1.0f) return MD_MATH_PI_2;
     if (x == -1.0f) return -MD_MATH_PI_2;
     
-    float sign = 1.0f;
     if (x < 0.0f) {
         sign = -1.0f;
         x = -x;
@@ -269,11 +280,6 @@ float MD_Math_ArcSin(float x)
         return sign * result;
     }
     
-    float x2 = x * x;
-    float term = x; 
-    float y = term;
-
-    float n = 1.0f;
     while (1) {
         float coef = (2*n-1)*(2*n-1) / (2*n*(2*n+1));
         term = term * coef * x2;
@@ -298,10 +304,13 @@ static float atan_taylor(float x) {
     float x2 = x * x;
     float term = x;
     float y = term;
+	int i;
+
+	float new_term;
     
-    for (int i = 1; i < 8; i++) {
+    for (i = 1; i < 8; i++) {
         term = term * (-x2);
-        float new_term = term / (2*i + 1);
+        new_term = term / (2*i + 1);
         
         if (MD_Math_Abs(new_term) < 1e-7f) break;
         
@@ -326,6 +335,9 @@ static float atan_rational(float x) {
 
 float MD_Math_ArcTan(float x)
 {
+    int reciprocal = 0;
+	float result;
+
     float sign = 1.0f;
     if (x < 0.0f) {
         sign = -1.0f;
@@ -335,13 +347,11 @@ float MD_Math_ArcTan(float x)
     if (x == 0.0f) return 0.0f;
     if (x == 1.0f) return sign * MD_MATH_PI_4;
 
-    int reciprocal = 0;
     if (x > 1.0f) {
         x = 1.0f / x;
         reciprocal = 1;
     }
 
-    float result;
     if (x < 0.25f) {
      
         result = atan_taylor(x);
@@ -367,15 +377,15 @@ float MD_Math_Csc(float x)
     return 1.0f / MD_Math_Sin(x);
 }
 
-bool MD_Math_Equal(float a,float b, float epsilon)
+int MD_Math_Equal(float a,float b, float epsilon)
 {
     if(MD_Math_Abs(a - b) < epsilon)
     {
-        return true;
+        return 1;
     }
     else
     {
-        return false;
+        return 0;
     }
 }
 
@@ -396,22 +406,23 @@ float MD_Math_EtoXPower(float x)
 
 float MD_Math_lnx(float x)
 {
+    int k = 0;
+
+	float t = x - 1.0f;  
+    float result = 0.0;
+    float term = t;     
+    float sign = 1.0;  
+    int n = 1;  
+
     if (x <= 0.0) {
         return 0.0; 
     }
 
-    int k = 0;
     while (x > 2.0) {
         x /= 2.0;
         k++;
     }
-
-    float t = x - 1.0f;  
-    float result = 0.0;
-    float term = t;     
-    float sign = 1.0;  
-    int n = 1;           
-
+         
     while (n <= 13) {
         double current = sign * term / n;
         result += (float)current;
@@ -558,22 +569,22 @@ float MD_Math_ComputeBallVolume(float radius)
 }
 
 // About Vector--------------------------------------------------------------------------------
-bool MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
+int MD_Math_Vector2Equal(MD_MATH_VECTOR2 v1,MD_MATH_VECTOR2 v2)
 {
     if(
         MD_Math_Equal(v1.x,v2.x,MD_MATH_EPSILON) &&
         MD_Math_Equal(v1.y,v2.y,MD_MATH_EPSILON)
     )
     {
-        return true;
+        return 1;
     }
     else
     {
-        return false;
+        return 0;
     }
 }
 
-bool MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
+int MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
 {
     if(
         MD_Math_Equal(v1.x,v2.x,MD_MATH_EPSILON) &&
@@ -581,15 +592,15 @@ bool MD_Math_Vector3Equal(MD_MATH_VECTOR3 v1,MD_MATH_VECTOR3 v2)
         MD_Math_Equal(v1.z,v2.z,MD_MATH_EPSILON) 
     )
     {
-        return true;
+        return 1;
     }
     else
     {
-        return false;
+        return 0;
     }
 }
 
-bool MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
+int MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
 {
     if(
         MD_Math_Equal(v1.x,v2.x,MD_MATH_EPSILON) &&
@@ -598,11 +609,11 @@ bool MD_Math_Vector4Equal(MD_MATH_VECTOR4 v1,MD_MATH_VECTOR4 v2)
         MD_Math_Equal(v1.w,v2.w,MD_MATH_EPSILON)
     )
     {
-        return true;
+        return 1;
     }
     else
     {
-        return false;
+        return 0;
     }
 }
 
@@ -1062,13 +1073,13 @@ MD_MATH_MATRIX MD_Math_InvMatrix(MD_MATH_MATRIX m)
    MD_MATH_MATRIX Inv,adj;
    
    float det = MD_Math_DetMatrix4x4(m);
+   float _1det = 1.0f / det;
 
    if(MD_Math_Abs(det) < MD_MATH_EPSILON)
    {
     return MD_Math_IdentityMatrix;
    }
 
-   float _1det = 1.0f / det;
    adj = MD_Math_AdjointMatrix(m);
 
    Inv = MD_Math_MatrixMultiplication(adj,_1det);
@@ -1076,7 +1087,7 @@ MD_MATH_MATRIX MD_Math_InvMatrix(MD_MATH_MATRIX m)
     return Inv;
 }
 
-bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2)
+int MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2)
 {
     if(
         MD_Math_Equal(m1._11,m2._11,MD_MATH_EPSILON) &&
@@ -1100,10 +1111,10 @@ bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2)
         MD_Math_Equal(m1._44,m2._44,MD_MATH_EPSILON) 
     )
     {
-        return true;
+        return 1;
     }
     else{
-        return false;
+        return 0;
     }
 }
 
@@ -1220,10 +1231,11 @@ MD_MATH_VECTOR3 MD_Math_Intersection(MD_MATH_RAY ray, MD_MATH_PLANE p)
 {
     MD_MATH_VECTOR3 r;
     MD_MATH_VECTOR3 n;
+	float t;
+
     n.x = p.a;
     n.y = p.b;
     n.z = p.c;
-    float t;
 
     t = ((-1) * p.d - MD_Math_Vector3Dot(n,ray.p0))/(MD_Math_Vector3Dot(n,ray.u));
 
