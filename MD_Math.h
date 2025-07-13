@@ -12,6 +12,10 @@ extern "C" {
 extern const float MD_MATH_PI;
 //Take 100 decimal places for pi
 
+#define MD_MATH_2PI 6.283185307179586f 
+#define MD_MATH_PI_2   1.57079632679489661923f
+#define MD_MATH_PI_4 0.78539816339744830962f
+
 extern const float MD_MATH_E;
 
 extern const float MD_MATH_PIReciprocal;
@@ -65,6 +69,7 @@ float MD_Math_Abs(float number);
 
 float MD_Math_Mod(float number1, float number2);
 
+float MD_Math_Pow(float x, int y);
 
 float MD_Math_Max(float number1, float number2);
 
@@ -93,6 +98,10 @@ float MD_Math_ArcSin(float x);
 float MD_Math_ArcCos(float x);
 
 float MD_Math_ArcTan(float x);
+
+float MD_Math_Sec(float x);
+
+float MD_Math_Csc(float x);
 
 bool MD_Math_Equal(float a,float b, float epsilon);
 

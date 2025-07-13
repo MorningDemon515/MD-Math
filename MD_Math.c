@@ -174,28 +174,71 @@ float MD_Math_Factorial(float number)
     
 }
 
-float MD_Math_Sin(float x)
+float MD_Math_Pow(float x, int y)
 {
-    return x - ((x*x*x)/MD_Math_Factorial(3.0f)) + 
-        ((x*x*x*x*x)/MD_Math_Factorial(5.0f))-
-        ((x*x*x*x*x*x*x)/MD_Math_Factorial(7.0f))+
-        ((x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(9.0f));
+    float r = 1.0f ;
+
+    for (int i = 1; i <= y; i++)
+    {
+        r = r * x;
+    }
+    
+    return r;
 }
 
-float MD_Math_Cos(float x)
+float MD_Math_Sin(float x)
 {
-    return 1 - ((x*x)/MD_Math_Factorial(2.0f)) + 
-        ((x*x*x*x)/MD_Math_Factorial(4.0f))-
-        ((x*x*x*x*x*x)/MD_Math_Factorial(6.0f))+
-        ((x*x*x*x*x*x*x*x)/MD_Math_Factorial(8.0f));//-
-        //((x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(10.0f))+
-        //((x*x*x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(12.0f))-
-        //((x*x*x*x*x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(14.0f));
+ 
+    if (MD_Math_Abs(x) < 1e-5f) return x;
+    
+    x = MD_Math_Mod(x, MD_MATH_2PI);
+    if (x < 0) x += MD_MATH_2PI;
+    
+    if (MD_Math_Abs(x) < 1e-5f) return 0.0f;
+    if (MD_Math_Abs(x - MD_MATH_PI_2) < 1e-5f) return 1.0f;
+    if (MD_Math_Abs(x - MD_MATH_PI) < 1e-5f) return 0.0f;
+    if (MD_Math_Abs(x - 3*MD_MATH_PI_2) < 1e-5f) return -1.0f;
+    
+    float sign = 1.0f;
+    if (x > MD_MATH_PI) {
+        x -= MD_MATH_PI;
+        sign = -1.0f;
+    }
+    if (x > MD_MATH_PI_2) {
+        x = MD_MATH_PI - x;
+    }
+    
+    float x2 = x * x;
+    float term = x;
+    float y = term;
+    
+    for (int i = 1; i < 5; i++) {
+        term = term * (-x2) / ((2*i) * (2*i+1));
+        y += term;
+        if (MD_Math_Abs(term) < 1e-7f) break; 
+    }
+    
+    return sign * y;
+}
+
+float MD_Math_Cos(float x) {
+
+    x = MD_Math_Mod(x, MD_MATH_2PI);
+    if (x < 0) x += MD_MATH_2PI;
+
+    float term = 1.0f;  
+    float y = term;     
+
+    for (int i = 1; i < 6; i++) {
+        term = term * (-x * x) / ((2 * i) * (2 * i - 1));
+        y += term;
+    }
+    return y;
 }
 
 float MD_Math_Tan(float x )
 {
-    return x + ((x*x*x)/3) - ((2*x*x*x*x*x)/15);
+    return MD_Math_Sin(x) / MD_Math_Cos(x);
 }
 
 float MD_Math_Cot(float x)
@@ -205,13 +248,45 @@ float MD_Math_Cot(float x)
 
 float MD_Math_ArcSin(float x)
 {
-    return x + 
-            0.1666666667f * x * x * x +
-            0.075f * x * x * x * x * x +
-            0.04464285714f * x * x * x * x * x * x * x +
-            0.03038194444f * x * x * x * x * x * x * x * x * x +
-            0.02237215909f * x * x * x * x * x * x * x * x * x * x * x +
-            0.01735276442f * x * x * x * x * x * x * x * x * x * x * x * x * x;
+
+    if (x < -1.0f || x > 1.0f) {
+        return 0.0f; 
+    }
+    
+    if (x == 0.0f) return 0.0f;
+    if (x == 1.0f) return MD_MATH_PI_2;
+    if (x == -1.0f) return -MD_MATH_PI_2;
+    
+    float sign = 1.0f;
+    if (x < 0.0f) {
+        sign = -1.0f;
+        x = -x;
+    }
+    
+    if (x > 0.5f) {
+        float t = MD_Math_Sqrt((1.0f - x) / 2.0f);
+        float result = MD_MATH_PI_2 - 2.0f * MD_Math_ArcSin(t);
+        return sign * result;
+    }
+    
+    float x2 = x * x;
+    float term = x; 
+    float y = term;
+
+    float n = 1.0f;
+    while (1) {
+        float coef = (2*n-1)*(2*n-1) / (2*n*(2*n+1));
+        term = term * coef * x2;
+        
+        if (MD_Math_Abs(term) < 1e-7f) break;
+        
+        y += term;
+        n += 1.0f;
+        
+        if (n > 7) break;
+    }
+    
+    return sign * y;
 }
 
 float MD_Math_ArcCos(float x)
@@ -219,15 +294,77 @@ float MD_Math_ArcCos(float x)
     return MD_MATH_PI * 0.5f - MD_Math_ArcSin(x);
 }
 
+static float atan_taylor(float x) {
+    float x2 = x * x;
+    float term = x;
+    float y = term;
+    
+    for (int i = 1; i < 8; i++) {
+        term = term * (-x2);
+        float new_term = term / (2*i + 1);
+        
+        if (MD_Math_Abs(new_term) < 1e-7f) break;
+        
+        y += new_term;
+    }
+    return y;
+}
+
+static float atan_rational(float x) {
+    const float p0 = 0.999999020228907f;
+    const float p1 = 0.257977658811405f;
+    const float p2 = 0.59120450521312f;
+    const float q1 = 1.2345555555555f;
+    const float q2 = 0.33333333333333f;
+    
+    float x2 = x * x;
+    float numerator = x * (p0 + x2 * (p1 + x2 * p2));
+    float denominator = 1.0f + x2 * (q1 + x2 * q2);
+    
+    return numerator / denominator;
+}
+
 float MD_Math_ArcTan(float x)
 {
-    return x - 
-            x * x * x * MD_MATH_THIRD +
-            x * x * x * x * x * 0.2f -
-            x * x * x * x * x * x * x * 0.1428571429f +
-            x * x * x * x * x * x * x * x * x * 0.1111111111f -
-            x * x * x * x * x * x * x * x * x * x * x * 0.09090909091f +
-            x * x * x * x * x * x * x * x * x * x * x * x * x * 0.07692307692f;
+    float sign = 1.0f;
+    if (x < 0.0f) {
+        sign = -1.0f;
+        x = -x;
+    }
+
+    if (x == 0.0f) return 0.0f;
+    if (x == 1.0f) return sign * MD_MATH_PI_4;
+
+    int reciprocal = 0;
+    if (x > 1.0f) {
+        x = 1.0f / x;
+        reciprocal = 1;
+    }
+
+    float result;
+    if (x < 0.25f) {
+     
+        result = atan_taylor(x);
+    } else {
+    
+        result = atan_rational(x);
+    }
+
+    if (reciprocal) {
+        result = MD_MATH_PI_2 - result;
+    }
+    
+    return sign * result;
+}
+
+float MD_Math_Sec(float x)
+{
+    return 1.0f/ MD_Math_Cos(x);
+}
+
+float MD_Math_Csc(float x)
+{
+    return 1.0f / MD_Math_Sin(x);
 }
 
 bool MD_Math_Equal(float a,float b, float epsilon)
@@ -248,7 +385,13 @@ float MD_Math_EtoXPower(float x)
     (x*x*x)/MD_Math_Factorial(3.0f)+
     (x*x*x*x)/MD_Math_Factorial(4.0f)+
     (x*x*x*x*x)/MD_Math_Factorial(5.0f)+
-    (x*x*x*x*x*x)/MD_Math_Factorial(6.0f);
+    (x*x*x*x*x*x)/MD_Math_Factorial(6.0f)+
+    (x*x*x*x*x*x*x)/MD_Math_Factorial(7.0f)+
+    (x*x*x*x*x*x*x*x)/MD_Math_Factorial(8.0f)+
+    (x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(9.0f)+
+    (x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(10.0f)+
+    (x*x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(11.0f)+
+    (x*x*x*x*x*x*x*x*x*x*x*x)/MD_Math_Factorial(12.0f);
 }
 
 float MD_Math_lnx(float x)
@@ -269,7 +412,7 @@ float MD_Math_lnx(float x)
     float sign = 1.0;  
     int n = 1;           
 
-    while (n <= 12) {
+    while (n <= 13) {
         double current = sign * term / n;
         result += (float)current;
 
