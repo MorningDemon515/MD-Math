@@ -1,4 +1,4 @@
 # MD-Math
 A Math Lib
 
-This library has only one header file, and its functionality is currently a bit weak and imperfect and can be used with <math.h> or <cmath.h>
+The library has a header file and a source file that provides a lot of computational functions and something about linear algebra that you can use as an alternative to glm or XMath, happy to use!
