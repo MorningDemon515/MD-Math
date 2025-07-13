@@ -1,0 +1,81 @@
+[
+    {
+        "caretX": 36,
+        "caretY": 8,
+        "filename": "D:/_/md_math/MathTest/src/Window.cpp",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 0,
+        "top": 0
+    },
+    {
+        "caretX": 3,
+        "caretY": 27,
+        "filename": "D:/_/md_math/MathTest/src/Main.cpp",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 1,
+        "top": 0
+    },
+    {
+        "caretX": 18,
+        "caretY": 8,
+        "filename": "D:/_/md_math/MathTest/src/Main.h",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 4,
+        "top": 0
+    },
+    {
+        "caretX": 20,
+        "caretY": 1266,
+        "filename": "D:/_/md_math/MD_Math.c",
+        "focused": true,
+        "isOpen": true,
+        "left": 0,
+        "order": 2,
+        "top": 25040
+    },
+    {
+        "caretX": 11,
+        "caretY": 12,
+        "filename": "D:/_/md_math/MathTest/src/Graphics_GL.cpp",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 5,
+        "top": 2520
+    },
+    {
+        "caretX": 1,
+        "caretY": 4,
+        "filename": "D:/_/md_math/MathTest/src/Shader_GL.cpp",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 3,
+        "top": 0
+    },
+    {
+        "caretX": 12,
+        "caretY": 18,
+        "filename": "D:/_/md_math/MathTest/glad4.6/src/glad.c",
+        "focused": false,
+        "isOpen": false,
+        "left": 0,
+        "top": 0
+    },
+    {
+        "caretX": 2,
+        "caretY": 311,
+        "filename": "D:/_/md_math/MD_Math.h",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 6,
+        "top": 5740
+    }
+]
