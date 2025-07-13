@@ -271,6 +271,8 @@ MD_MATH_MATRIX MD_Math_InvMatrix(MD_MATH_MATRIX m);
 
 bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2);
 
+void MD_Math_MatrixToValue(MD_MATH_MATRIX m, float* out);
+
 //Plane-------------------------------------------------------------------------------
 
 typedef struct MD_MATH_PLANE  
@@ -298,9 +300,21 @@ typedef struct MD_MATH_RAY
 
 MD_MATH_VECTOR3 MD_Math_CreateRay(MD_MATH_RAY ray,float t);
 MD_MATH_VECTOR3 MD_Math_Intersection(MD_MATH_RAY ray, MD_MATH_PLANE p);
+	
 MD_MATH_MATRIX MD_Math_ScaleMatrix(float x, float y, float z);
 MD_MATH_MATRIX MD_Math_TranslationMatrix(float x, float y, float z);
 MD_MATH_MATRIX MD_Math_RotationMatrix(float Angle, char Axis);
+	
+MD_MATH_MATRIX MD_Math_PerspectiveMatrixRH(float fovy, float aspect, float zNear, float zFar);	
+MD_MATH_MATRIX MD_Math_OrthoMatrixRH(float l, float r, float b, float t, float n, float f);	
+MD_MATH_MATRIX MD_Math_ViewMatrixRH(MD_MATH_VECTOR3 eye, MD_MATH_VECTOR3 target, MD_MATH_VECTOR3 up);	
+	
+MD_MATH_MATRIX MD_Math_PerspectiveMatrixLH(float fovy, float aspect, float zNear, float zFar);
+MD_MATH_MATRIX MD_Math_OrthoMatrixLH(float l, float r, float b, float t, float n, float f);
+MD_MATH_MATRIX MD_Math_ViewMatrixLH(MD_MATH_VECTOR3 eye, MD_MATH_VECTOR3 target, MD_MATH_VECTOR3 up);
+
+MD_MATH_MATRIX MD_Math_ReflectMatrix(MD_MATH_PLANE p);	
+MD_MATH_MATRIX MD_Math_Shadow(MD_MATH_VECTOR4 Light, MD_MATH_PLANE p);	
 
 #ifdef __cplusplus
 }

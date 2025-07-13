@@ -964,6 +964,13 @@ bool MD_Math_MatrixEqual(MD_MATH_MATRIX m1 , MD_MATH_MATRIX m2)
     }
 }
 
+void MD_Math_MatrixToValue(MD_MATH_MATRIX m, float* out) {
+	out[0] = m._11; out[1] = m._21; out[2] = m._31; out[3] = m._41;
+	out[4] = m._12; out[5] = m._22; out[6] = m._32; out[7] = m._42;
+	out[8] = m._13; out[9] = m._23; out[10] = m._33; out[11] = m._43;
+	out[12] = m._14; out[13] = m._24; out[14] = m._34; out[15] = m._44;
+}
+
 //Plane-------------------------------------------------------------------------------
 
 MD_MATH_PLANE MD_Math_PlaneFromPointAndNormal(MD_MATH_VECTOR3 Point,MD_MATH_VECTOR3 Normal)
@@ -1142,7 +1149,236 @@ MD_MATH_MATRIX MD_Math_RotationMatrix(float Angle, char Axis)
 		return MD_Math_IdentityMatrix;
 	}
 }
+	
+MD_MATH_MATRIX MD_Math_OrthoMatrixRH(float l, float r, float b, float t, float n, float f)
+{
+	MD_MATH_MATRIX result = MD_Math_IdentityMatrix;
+		
+	result._11 = 2.0f/(r-l);
+	result._21 = 0.0f;
+	result._31 = 0.0f;
+	result._41 = 0.0f;
+	
+	result._12 = 0.0f;
+	result._22 = 2.0f/(t-b);
+	result._32 = 0.0f;
+	result._42 = 0.0f;
+	
+	result._13 = 0.0f;
+	result._23 = 0.0f;
+	result._33 = 2.0f/(n-f);
+	result._43 = 0.0f;
+	
+	result._14 = -(r+l)/(r-l);
+	result._24 = -(t+b)/(t-b);
+	result._34 = (n+f)/(n-f);
+	result._44 = 1.0f;
+	
+	return result;
+}
+	
+MD_MATH_MATRIX MD_Math_PerspectiveMatrixRH(float fovy, float aspect, float zNear, float zFar)
+{
+	MD_MATH_MATRIX result = {0.0f,0.0f,0.0f,0.0f,
+	                         0.0f,0.0f,0.0f,0.0f,
+	                         0.0f,0.0f,0.0f,0.0f,
+	                         0.0f,0.0f,0.0f,0.0f}; 
 
+	float f = 1.0f / MD_Math_Tan(fovy / 2.0f);
+
+	result._11  = f / aspect;  
+	result._22  = f;           
+	result._33 = (zFar + zNear) / (zNear - zFar);  
+	result._34 = -1.0f;                         
+	result._43 = (2.0f * zFar * zNear) / (zNear - zFar); 
+	
+	return MD_Math_MatrixTranspose(result);
+}
+	
+MD_MATH_MATRIX MD_Math_ViewMatrixRH(MD_MATH_VECTOR3 eye, MD_MATH_VECTOR3 target, MD_MATH_VECTOR3 up)
+{
+	MD_MATH_MATRIX view = MD_Math_IdentityMatrix;
+		
+	MD_MATH_VECTOR3 forward = MD_Math_Vector3Normalized(
+		MD_Math_Vector3Addition(target, MD_Math_Vector3Multiplication(eye,-1.0f)) // target - eye
+		);
+		
+	MD_MATH_VECTOR3 right = MD_Math_Vector3Normalized(
+		MD_Math_VectorCross(forward, up)
+		);
+		
+	up = MD_Math_Vector3Normalized(
+		MD_Math_VectorCross(right, forward)
+		);
+		
+	view._11 = right.x;    
+	view._12 = right.y;
+	view._13 = right.z;
+	
+	view._21 = up.x;      
+	view._22 = up.y;
+	view._23 = up.z;
+		
+	view._31 = -forward.x; 
+	view._32 = -forward.y;
+	view._33 = -forward.z;
+		
+	view._14 = -MD_Math_Vector3Dot(right, eye);   
+	view._24 = -MD_Math_Vector3Dot(up, eye);      
+	view._34 = MD_Math_Vector3Dot(forward, eye);  
+		
+	return view;
+}
+
+MD_MATH_MATRIX MD_Math_OrthoMatrixLH(float l, float r, float b, float t, float n, float f)
+{
+    MD_MATH_MATRIX result = MD_Math_IdentityMatrix;
+
+    result._11 = 2.0f / (r - l);
+    result._12 = 0.0f;
+    result._13 = 0.0f;
+    result._14 = 0.0f;
+
+    result._21 = 0.0f;
+    result._22 = 2.0f / (t - b);
+    result._23 = 0.0f;
+    result._24 = 0.0f;
+
+    result._31 = 0.0f;
+    result._32 = 0.0f;
+    result._33 = 1.0f / (f - n);      
+    result._34 = 0.0f;
+
+    result._41 = -(r + l) / (r - l);  
+    result._42 = -(t + b) / (t - b);  
+    result._43 = -n / (f - n);       
+    result._44 = 1.0f;
+
+    return result;
+}
+
+MD_MATH_MATRIX MD_Math_PerspectiveMatrixLH(float fovy, float aspect, float zNear, float zFar)
+{
+    MD_MATH_MATRIX result = { 0 };
+    float f = 1.0f / MD_Math_Tan(fovy / 2.0f);
+
+    result._11 = f / aspect;
+    result._22 = f;
+    result._33 = zFar / (zFar - zNear);      
+    result._34 = 1.0f;                      
+    result._43 = -zNear * zFar / (zFar - zNear); 
+
+    return MD_Math_MatrixTranspose(result); 
+}
+
+MD_MATH_MATRIX MD_Math_ViewMatrixLH(MD_MATH_VECTOR3 eye, MD_MATH_VECTOR3 target, MD_MATH_VECTOR3 up)
+{
+    MD_MATH_MATRIX view = MD_Math_IdentityMatrix;
+
+    MD_MATH_VECTOR3 forward = MD_Math_Vector3Normalized(
+        MD_Math_Vector3Addition(target, MD_Math_Vector3Multiplication(eye, -1.0f))
+    );
+
+    MD_MATH_VECTOR3 right = MD_Math_Vector3Normalized(
+        MD_Math_VectorCross(up, forward) 
+    );
+
+    up = MD_Math_Vector3Normalized(
+        MD_Math_VectorCross(forward, right)
+    );
+
+    view._11 = right.x;
+    view._12 = right.y;
+    view._13 = right.z;
+
+    view._21 = up.x;
+    view._22 = up.y;
+    view._23 = up.z;
+
+    view._31 = forward.x; 
+    view._32 = forward.y;
+    view._33 = forward.z;
+
+    view._14 = -MD_Math_Vector3Dot(right, eye);   
+    view._24 = -MD_Math_Vector3Dot(up, eye);     
+    view._34 = -MD_Math_Vector3Dot(forward, eye); 
+
+    return view;
+}
+	
+MD_MATH_MATRIX MD_Math_ReflectMatrix(MD_MATH_PLANE p)
+{
+	MD_MATH_MATRIX reflect = MD_Math_IdentityMatrix;
+	
+	MD_MATH_PLANE plane = MD_Math_PlaneNormalize(p);
+	
+	const float a = plane.a;
+	const float b = plane.b;
+	const float c = plane.c;
+	const float d = plane.d;
+	
+	reflect._11 = 1 - 2*a*a;
+	reflect._12 = -2*a*b;
+	reflect._13 = -2*a*c;
+	reflect._14 = -2*a*d;
+	
+	reflect._21 = -2*a*b;
+	reflect._22 = 1 - 2*b*b;
+	reflect._23 = -2*b*c;
+	reflect._24 = -2*b*d;
+	
+	reflect._31 = -2*a*c;
+	reflect._32 = -2*b*c;
+	reflect._33 = 1 - 2*c*c;
+	reflect._34 = -2*c*d;
+	
+	return reflect;
+}
+
+	//If OpenGL Need Transpose
+MD_MATH_MATRIX MD_Math_Shadow(MD_MATH_VECTOR4 Light, MD_MATH_PLANE p)
+{
+	MD_MATH_MATRIX shadow = {0.0f,0.0f,0.0f,0.0f,
+	                         0.0f,0.0f,0.0f,0.0f,
+	                         0.0f,0.0f,0.0f,0.0f,
+	                         0.0f,0.0f,0.0f,0.0f};
+	
+	MD_MATH_PLANE plane = MD_Math_PlaneNormalize(p);
+	const float a = plane.a;
+	const float b = plane.b;
+	const float c = plane.c;
+	const float d = plane.d;
+	
+	const float lx = Light.x;
+	const float ly = Light.y;
+	const float lz = Light.z;
+	const float lw = Light.w;
+	
+	const float dot = a * lx + b * ly + c * lz + d * lw;
+	
+	shadow._11 = dot - a * lx;
+	shadow._21 = - b * lx;
+	shadow._31 = - c * lx;
+	shadow._41 = - d * lx;
+	
+	shadow._12 = - a * ly;
+	shadow._22 = dot - b * ly;
+	shadow._32 = - c * ly;
+	shadow._42 = - d * ly;
+	
+	shadow._13 = - a * lz;
+	shadow._23 = - b * lz;
+	shadow._33 = dot - c * lz;
+	shadow._43 = - d * lz;
+	
+	shadow._14 = - a * lw;
+	shadow._24 = - b * lw;
+	shadow._34 = - c * lw;
+	shadow._44 = dot - d * lw;
+	
+	return shadow;
+}
+	
 #ifdef __cplusplus
 }
 #endif
