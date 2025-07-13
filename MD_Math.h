@@ -1,3 +1,5 @@
+#ifndef MD_MATH_H
+#define MD_MATH_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -327,4 +329,6 @@ MD_MATH_MATRIX MD_Math_Shadow(MD_MATH_VECTOR4 Light, MD_MATH_PLANE p);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
