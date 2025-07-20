@@ -161,16 +161,19 @@ float MD_Math_Hypot(float x,float y)
     return MD_Math_Sqrt((x*x + y*y));
 }
 
-float MD_Math_Factorial(float number)
+float MD_Math_Factorial(int number)
 {
-    int factorial = 1;
- 
-    for(int i = 1; i <=(int)number; ++i)
+    float r = 1.0f;
+    
+    float f= 1.0f;
+    for (int i = 1; i < number; i++)
     {
-        factorial *= i;
+        f = f + 1.0f;
+        r = r * f;
+
     }
 
-    return (float)factorial;
+    return r;
     
 }
 
@@ -178,7 +181,7 @@ float MD_Math_Pow(float x, int y)
 {
     float r = 1.0f ;
 
-    for (int i = 1; i <= y; i++)
+    for (int i = 0; i < y; i++)
     {
         r = r * x;
     }
@@ -188,52 +191,42 @@ float MD_Math_Pow(float x, int y)
 
 float MD_Math_Sin(float x)
 {
- 
-    if (MD_Math_Abs(x) < 1e-5f) return x;
-    
-    x = MD_Math_Mod(x, MD_MATH_2PI);
-    if (x < 0) x += MD_MATH_2PI;
-    
-    if (MD_Math_Abs(x) < 1e-5f) return 0.0f;
-    if (MD_Math_Abs(x - MD_MATH_PI_2) < 1e-5f) return 1.0f;
-    if (MD_Math_Abs(x - MD_MATH_PI) < 1e-5f) return 0.0f;
-    if (MD_Math_Abs(x - 3*MD_MATH_PI_2) < 1e-5f) return -1.0f;
-    
-    float sign = 1.0f;
-    if (x > MD_MATH_PI) {
-        x -= MD_MATH_PI;
-        sign = -1.0f;
-    }
-    if (x > MD_MATH_PI_2) {
-        x = MD_MATH_PI - x;
-    }
-    
-    float x2 = x * x;
-    float term = x;
-    float y = term;
-    
-    for (int i = 1; i < 5; i++) {
-        term = term * (-x2) / ((2*i) * (2*i+1));
-        y += term;
-        if (MD_Math_Abs(term) < 1e-7f) break; 
-    }
-    
-    return sign * y;
+   float r = 0.0f;
+
+   int k = (int)(x / MD_MATH_2PI);
+
+   for (int j = 0; j < k; j++)
+   {
+    x = x - MD_MATH_2PI;
+   }
+   
+   for (int i = 0; i < 13; i++)
+   {
+    r = r +((MD_Math_Pow(-1.0f,i)/ MD_Math_Factorial((float)(2 * i + 1))) *
+          MD_Math_Pow(x,(2 * i + 1)));
+   }
+   
+   return r;
 }
 
-float MD_Math_Cos(float x) {
+float MD_Math_Cos(float x) 
+{
+    float r = 0.0f;
 
-    x = MD_Math_Mod(x, MD_MATH_2PI);
-    if (x < 0) x += MD_MATH_2PI;
+   int k = (int)(x / MD_MATH_2PI);
 
-    float term = 1.0f;  
-    float y = term;     
-
-    for (int i = 1; i < 6; i++) {
-        term = term * (-x * x) / ((2 * i) * (2 * i - 1));
-        y += term;
-    }
-    return y;
+   for (int j = 0; j < k; j++)
+   {
+    x = x - MD_MATH_2PI;
+   }
+   
+   for (int i = 0; i < 13; i++)
+   {
+    r = r +((MD_Math_Pow(-1.0f,i)/ MD_Math_Factorial((float)(2 * i))) *
+          MD_Math_Pow(x,(2 * i)));
+   }
+   
+   return r;   
 }
 
 float MD_Math_Tan(float x )
@@ -248,45 +241,17 @@ float MD_Math_Cot(float x)
 
 float MD_Math_ArcSin(float x)
 {
+    float r = 0.0f;
 
-    if (x < -1.0f || x > 1.0f) {
-        return 0.0f; 
+    for (int i = 0; i < 8; i++)
+    {
+        r = r + (
+            (MD_Math_Factorial((float)(2 * i)))/(MD_Math_Pow(4.0f, i) * ((float)(2 * i + 1)) * (MD_Math_Pow(MD_Math_Factorial(i),2)))
+        ) * 
+        (MD_Math_Pow(x, 2 * i + 1));
     }
     
-    if (x == 0.0f) return 0.0f;
-    if (x == 1.0f) return MD_MATH_PI_2;
-    if (x == -1.0f) return -MD_MATH_PI_2;
-    
-    float sign = 1.0f;
-    if (x < 0.0f) {
-        sign = -1.0f;
-        x = -x;
-    }
-    
-    if (x > 0.5f) {
-        float t = MD_Math_Sqrt((1.0f - x) / 2.0f);
-        float result = MD_MATH_PI_2 - 2.0f * MD_Math_ArcSin(t);
-        return sign * result;
-    }
-    
-    float x2 = x * x;
-    float term = x; 
-    float y = term;
-
-    float n = 1.0f;
-    while (1) {
-        float coef = (2*n-1)*(2*n-1) / (2*n*(2*n+1));
-        term = term * coef * x2;
-        
-        if (MD_Math_Abs(term) < 1e-7f) break;
-        
-        y += term;
-        n += 1.0f;
-        
-        if (n > 7) break;
-    }
-    
-    return sign * y;
+    return r;
 }
 
 float MD_Math_ArcCos(float x)
@@ -294,67 +259,17 @@ float MD_Math_ArcCos(float x)
     return MD_MATH_PI * 0.5f - MD_Math_ArcSin(x);
 }
 
-static float atan_taylor(float x) {
-    float x2 = x * x;
-    float term = x;
-    float y = term;
-    
-    for (int i = 1; i < 8; i++) {
-        term = term * (-x2);
-        float new_term = term / (2*i + 1);
-        
-        if (MD_Math_Abs(new_term) < 1e-7f) break;
-        
-        y += new_term;
-    }
-    return y;
-}
-
-static float atan_rational(float x) {
-    const float p0 = 0.999999020228907f;
-    const float p1 = 0.257977658811405f;
-    const float p2 = 0.59120450521312f;
-    const float q1 = 1.2345555555555f;
-    const float q2 = 0.33333333333333f;
-    
-    float x2 = x * x;
-    float numerator = x * (p0 + x2 * (p1 + x2 * p2));
-    float denominator = 1.0f + x2 * (q1 + x2 * q2);
-    
-    return numerator / denominator;
-}
-
 float MD_Math_ArcTan(float x)
 {
-    float sign = 1.0f;
-    if (x < 0.0f) {
-        sign = -1.0f;
-        x = -x;
-    }
+    float r = 0.0f;
 
-    if (x == 0.0f) return 0.0f;
-    if (x == 1.0f) return sign * MD_MATH_PI_4;
-
-    int reciprocal = 0;
-    if (x > 1.0f) {
-        x = 1.0f / x;
-        reciprocal = 1;
-    }
-
-    float result;
-    if (x < 0.25f) {
-     
-        result = atan_taylor(x);
-    } else {
-    
-        result = atan_rational(x);
-    }
-
-    if (reciprocal) {
-        result = MD_MATH_PI_2 - result;
+    for (int i = 0; i < 24; i++)
+    {
+        r = r + (MD_Math_Pow(-1.0f, i) / (float)(2 * i + 1) ) * 
+                (MD_Math_Pow(x, 2 * i + 1));
     }
     
-    return sign * result;
+    return r;
 }
 
 float MD_Math_Sec(float x)

@@ -17,6 +17,7 @@ extern const float MD_MATH_PI;
 #define MD_MATH_2PI 6.283185307179586f 
 #define MD_MATH_PI_2   1.57079632679489661923f
 #define MD_MATH_PI_4 0.78539816339744830962f
+#define MD_MATH_3_2_PI 4.71238898038468985769f
 
 extern const float MD_MATH_E;
 
@@ -85,7 +86,7 @@ float MD_Math_Rsqrt(float number);
 
 float MD_Math_Hypot(float x,float y);
 
-float MD_Math_Factorial(float number);
+float MD_Math_Factorial(int number);
 
 float MD_Math_Sin(float x);
 
