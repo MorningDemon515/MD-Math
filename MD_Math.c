@@ -194,12 +194,20 @@ float MD_Math_Sin(float x)
    float r = 0.0f;
 
    int k = (int)(x / MD_MATH_2PI);
+    
+    if(k < 0)
+    {
+        for (int j = 0; j < (-1) * k; j++)
+        {
+            x = x + MD_MATH_2PI;
+        }
+    }
 
-   for (int j = 0; j < k; j++)
-   {
-    x = x - MD_MATH_2PI;
-   }
-   
+    for (int j = 0; j < k; j++)
+    {
+        x = x - MD_MATH_2PI;
+    }
+
    for (int i = 0; i < 13; i++)
    {
     r = r +((MD_Math_Pow(-1.0f,i)/ MD_Math_Factorial((float)(2 * i + 1))) *
@@ -214,12 +222,20 @@ float MD_Math_Cos(float x)
     float r = 0.0f;
 
    int k = (int)(x / MD_MATH_2PI);
+    
+    if(k < 0)
+    {
+        for (int j = 0; j < (-1) * k; j++)
+        {
+            x = x + MD_MATH_2PI;
+        }
+    }
 
-   for (int j = 0; j < k; j++)
-   {
-    x = x - MD_MATH_2PI;
-   }
-   
+    for (int j = 0; j < k; j++)
+    {
+         x = x - MD_MATH_2PI;
+    }
+
    for (int i = 0; i < 13; i++)
    {
     r = r +((MD_Math_Pow(-1.0f,i)/ MD_Math_Factorial((float)(2 * i))) *
