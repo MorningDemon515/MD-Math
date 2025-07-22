@@ -1,0 +1,113 @@
+Defined constants:
+
+MD_MATH_PI : Approximation of Pi
+MD_MATH_2PI : Approximation of  2 times Pi
+MD_MATH_PI_2 : Approximation of Pi divided by 2
+MD_MATH_PI_4 : Approximation of 4 times Pi
+MD_MATH_3_2_PI : Approximation of Pi divided by 1.5
+MD_MATH_E : Approximation of E
+MD_MATH_PIReciprocal : Approximation of 1 divided by Pi
+MD_MATH_THIRD : Approximation of 1 divided by 3
+MD_MATH_SQRT2 : Approximation of The square root of 2
+MD_MATH_SQRT3 : Approximation of The square root of 3
+MD_MATH_OneHundredAndEighty : 180 degrees
+MD_MATH_1Degree : 1 degrees
+MD_MATH_1Radian  : 1 Radian
+MD_MATH_EPSILON : Epsilon
+MD_MATH_LN2 : The natural constant logarithm of 2
+
+//Special trigonometric values
+ MD_MATH_SIN0 
+ MD_MATH_SIN30  
+ MD_MATH_SIN45  
+ MD_MATH_SIN60  
+ MD_MATH_SIN90  
+ MD_MATH_SIN120  
+ MD_MATH_SIN150  
+ MD_MATH_SIN180  
+ MD_MATH_SIN270 
+
+ MD_MATH_COS0 
+ MD_MATH_COS30  
+ MD_MATH_COS45 
+ MD_MATH_COS60  
+ MD_MATH_COS90 
+ MD_MATH_COS120  
+ MD_MATH_COS150  
+ MD_MATH_COS180  
+ MD_MATH_COS270  
+
+MD_MATH_TAN0  
+ MD_MATH_TAN30 
+ MD_MATH_TAN45  
+ MD_MATH_TAN60  
+ MD_MATH_TAN120  
+ MD_MATH_TAN150  
+ MD_MATH_TAN180       
+
+Structure:  
+
+VECTOR2 : 2D vectors
+VECTOR3 : 3D vector
+VECTOR4 : Four-dimensional vectors
+
+MATRIX : Four-dimensional matrix
+MATRIX2x2 : 2D matrix(Not put into use)
+MATRIX3x3 : Three-dimensional matrix(Not put into use)
+
+PLANE : A Plane
+RAY : A Ray
+
+Commonly used functions :
+Abs : Calculate absolute values
+Mod : Calculation modulus
+Pow : Calculate the y-power of x
+Max : Find the maximum
+Min : Find the minimum
+Sqrt : Calculate the square root
+Cbrt : Calculate the cube root
+Rsqrt : Calculate the reciprocal of the square root
+Hypot : Calculate the Euclidean norm
+Factorial : Calculate the factorial
+Sin : Sine
+Cos : cosine
+Tan : tangent
+Cot : cotangent
+ArcSin : arcsine
+ArcCos : arccosine
+ArcTan : arctangent
+Sec : secant
+Csc : cosecant
+Equal : Judge that two real numbers are equal
+EtoXPower : e's power to the x-th power
+lnx : A logarithmic function of a natural constant
+lgx : Commonly used logarithmic functions
+log2 : The logarithm of x with base x as 2
+AngularToRadian : Angular radian
+RadianToangle : Radian rotation angle
+
+About calculating area and volume :
+ComputeRectanglePerimeter
+ComputeSquarePerimeter
+ComputeRectangleArea
+ComputeSquareArea
+ComputeTriangleArea
+ComputeParallelogramArea
+ComputeTrapezoidArea
+ComputeCirclePerimeter
+ComputeCircleArea
+ComputeCuboidVolume
+ComputeCubeVolume
+ComputeCylinderSideArea
+ComputeConeSideArea
+ComputeRoundTableSideArea
+ComputeCylinderSurfaceArea
+ComputeConeSurfaceArea
+ComputeRoundTableSurfaceArea
+ComputeBallSurfaceArea
+ComputeCylinderVolume
+ComputeConeVolume
+ComputeRoundTableVolume
+ComputeBallVolume
+
+The following functions are related to graph calculations, so I won't talk about them here
