@@ -1,0 +1,41 @@
+[
+    {
+        "caretX": 1,
+        "caretY": 296,
+        "filename": "D:/_/md_math/MD_Math.h",
+        "focused": false,
+        "isOpen": false,
+        "left": 0,
+        "top": 5900
+    },
+    {
+        "caretX": 12,
+        "caretY": 152,
+        "filename": "D:/_/md_math/example/OpenGL/src/Graphics_GL.cpp",
+        "focused": true,
+        "isOpen": true,
+        "left": 0,
+        "order": 0,
+        "top": 2860
+    },
+    {
+        "caretX": 1,
+        "caretY": 1,
+        "filename": "D:/_/md_math/example/OpenGL/src/Main.h",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 2,
+        "top": 0
+    },
+    {
+        "caretX": 2,
+        "caretY": 58,
+        "filename": "D:/_/md_math/example/OpenGL/src/Main.cpp",
+        "focused": false,
+        "isOpen": true,
+        "left": 0,
+        "order": 1,
+        "top": 900
+    }
+]
