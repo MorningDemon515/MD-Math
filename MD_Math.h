@@ -291,6 +291,8 @@ namespace MD_Math{
 
     MATRIX ReflectMatrix(PLANE p);	
     MATRIX ShadowMatrix(VECTOR4 Light, PLANE p);	
+
+    MATRIX NormalMatrix(MATRIX model);
 }
 
 #endif

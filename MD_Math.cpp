@@ -1729,6 +1729,11 @@ namespace MD_Math{
 	    return shadow;
     }
 
+    MATRIX NormalMatrix(MATRIX model)
+    {
+        return MatrixTranspose(InvMatrix(model));
+    }
+
     VECTOR2 VECTOR2::operator - ()
     {
 		VECTOR2 temp(
