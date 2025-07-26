@@ -1310,6 +1310,21 @@ namespace MD_Math{
     	out[12] = m._14; out[13] = m._24; out[14] = m._34; out[15] = m._44;
     }
 
+    void Vector2ToValue(VECTOR2 v, float* out)
+    {
+        out[0] = v.x; out[1] = v.y;
+    }
+
+    void Vector3ToValue(VECTOR3 v, float* out)
+    {
+        out[0] = v.x; out[1] = v.y; out[2] = v.z;
+    }
+
+    void Vector4ToValue(VECTOR4 v, float* out)
+    {
+        out[0] = v.x; out[1] = v.y; out[2] = v.z; out[3] = v.w;
+    }
+
     //Plane-------------------------------------------------------------------------------
 
     PLANE PlaneFromPointAndNormal(VECTOR3 Point,VECTOR3 Normal)

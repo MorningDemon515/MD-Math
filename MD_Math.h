@@ -248,6 +248,9 @@ namespace MD_Math{
     MATRIX AdjointMatrix(MATRIX m);
     MATRIX InvMatrix(MATRIX m);
     void MatrixToValue(MATRIX m, float* out);
+    void Vector2ToValue(VECTOR2 v, float* out);
+    void Vector3ToValue(VECTOR3 v, float* out);
+    void Vector4ToValue(VECTOR4 v, float* out);
 
 //Plane-------------------------------------------------------------------------------
 
