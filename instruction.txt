@@ -55,6 +55,8 @@ MATRIX : Four-dimensional matrix
 MATRIX2x2 : 2D matrix(Not put into use)
 MATRIX3x3 : Three-dimensional matrix(Not put into use)
 
+QUATERNION
+
 PLANE : A Plane
 RAY : A Ray
 
@@ -76,6 +78,7 @@ Cot : cotangent
 ArcSin : arcsine
 ArcCos : arccosine
 ArcTan : arctangent
+ArcTan2: Determine the correct quadrant by considering the symbol of the two coordinates, returning angles in the range of -π to π (-180° to 180°)
 Sec : secant
 Csc : cosecant
 Equal : Judge that two real numbers are equal
@@ -109,5 +112,22 @@ ComputeCylinderVolume
 ComputeConeVolume
 ComputeRoundTableVolume
 ComputeBallVolume
+
+QuaternionLength
+QuaternionNormalize
+QuaternionConjugate
+QUATERNION QuaternionInverse
+QuaternionDot
+
+QuaternionFromAxisAngle
+QuaternionFromEulerAngles
+QuaternionFromMatrix
+
+MatrixFromQuaternion
+EulerAnglesFromQuaternion
+
+RotateVector
+QuaternionSlerp
+QuaternionLerp
 
 The following functions are related to graph calculations, so I won't talk about them here
