@@ -279,6 +279,18 @@ namespace MD_Math{
     
     QUATERNION Mix(const QUATERNION& q1, const QUATERNION& q2, float a);
 
+    typedef struct IVECTOR4 { // Just For Assimp
+    int x, y, z, w;
+    IVECTOR4() : x(0), y(0), z(0), w(0) {}
+    IVECTOR4(int a, int b, int c, int d) : x(a), y(b), z(c), w(d) {}
+    } IVECTOR4;
+
+    typedef struct IVECTOR2 { // Just For FreeType
+    int x, y;
+    IVECTOR2() : x(0), y(0){}
+    IVECTOR2(int a, int b) : x(a), y(b){}
+    } IVECTOR2;
+
 
 // About Vector--------------------------------------------------------------------------------
 
@@ -354,6 +366,7 @@ namespace MD_Math{
     MATRIX ShadowMatrix(VECTOR4 Light, PLANE p);	
 
     MATRIX NormalMatrix(MATRIX model);
+    MATRIX BillboardMatrix(const VECTOR3& position, const MATRIX& view);
 }
 
 #endif
